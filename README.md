@@ -1,16 +1,35 @@
-# React + Vite
+# Homies Stay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Homies Stay is a React single-page application for discovering and managing hostel stays.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+## Production build
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Run the checks locally before deploying:
 
-## Expanding the ESLint configuration
+```bash
+npm run lint
+npm run build
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The deployable static files are generated in `dist`. To test that output locally:
+
+```bash
+npm run preview
+```
+
+## Deployment
+
+Configure the hosting provider with:
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Node.js: use a current LTS release
+
+This app uses `BrowserRouter`. The included `public/_redirects` and `vercel.json` files keep client-side routes working when a user refreshes a nested URL on Netlify or Vercel.
