@@ -1,6 +1,10 @@
 import Button from '../common/Button';
 
+const getHostelSlug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
 const PropertyCard = ({ hostel }) => {
+	const hostelSlug = hostel.slug || getHostelSlug(hostel.name);
+
 	return (
 		<article className="property-card">
 			<div className="property-card-image-wrap">
@@ -21,7 +25,7 @@ const PropertyCard = ({ hostel }) => {
 					<p className="property-card-price">
 						<strong>{hostel.price}</strong> <span>/ month</span>
 					</p>
-					<Button className="property-card-link" href="/hostels" variant="link">
+					<Button className="property-card-link" href={`/hostels/${hostelSlug}`} variant="link">
 						View Details <span aria-hidden="true">&rarr;</span>
 					</Button>
 				</div>

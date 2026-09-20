@@ -3630,3 +3630,291 @@ select:focus-visible {
     border-right-color: var(--border);
   }
 }
+
+.hostel-detail-page {
+  color: #526466;
+  background: #fbfaf5;
+  text-align: left;
+}
+
+.hostel-detail-inner {
+  width: min(100% - 3rem, 1260px);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) 0 clamp(4rem, 8vw, 7rem);
+}
+
+.hostel-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.5rem;
+  color: #47746f;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.hostel-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+  border-bottom: 1px solid #d9e2d8;
+}
+
+.hostel-detail-image {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 16px 16px 0 #d3dfc4;
+}
+
+.hostel-detail-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.18;
+  object-fit: cover;
+}
+
+.hostel-detail-image > span {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  color: #214f55;
+  background: #d5e99a;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.hostel-detail-summary {
+  max-width: 520px;
+}
+
+.hostel-detail-kicker {
+  margin: 0 0 0.65rem;
+  color: #78994e;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hostel-detail-summary h1 {
+  margin: 0;
+  color: #173b40;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.8rem, 5vw, 5.2rem);
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 0.94;
+}
+
+.hostel-detail-location {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  color: #71807d;
+  font-size: 0.82rem;
+}
+
+.hostel-detail-location svg { color: #78994e; }
+
+.hostel-detail-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  font-size: 0.76rem;
+}
+
+.hostel-detail-rating strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #536c2e;
+}
+
+.hostel-detail-rating strong svg { fill: currentColor; }
+.hostel-detail-rating span { color: #8a9b98; }
+
+.hostel-detail-description {
+  margin-top: 1.5rem;
+  color: #71807d;
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.hostel-detail-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-top: 1.6rem;
+}
+
+.hostel-detail-price strong {
+  color: #214f55;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.hostel-detail-price span { color: #8a9b98; font-size: 0.75rem; }
+
+.hostel-detail-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+.hostel-enquire-button,
+.hostel-save-button,
+.hostel-detail-aside button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.hostel-enquire-button {
+  padding: 0 1rem;
+  color: #fff;
+  background: #214f55;
+}
+
+.hostel-enquire-button:hover { background: #173b40; }
+
+.hostel-save-button {
+  width: 3rem;
+  color: #47746f;
+  background: #eaf0e9;
+}
+
+.hostel-save-button.saved { color: #fff; background: #78994e; }
+.hostel-save-button.saved svg { fill: currentColor; }
+
+.hostel-enquiry-note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  color: #668342;
+  font-size: 0.75rem;
+}
+
+.hostel-detail-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr);
+  gap: clamp(2rem, 8vw, 8rem);
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+
+.hostel-detail-main { display: grid; gap: 4rem; }
+
+.hostel-detail-section h2 {
+  max-width: 600px;
+  margin: 0;
+  color: #173b40;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 3.5vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.hostel-detail-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hostel-detail-highlights span {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid #d9e2d8;
+  color: #71807d;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.hostel-detail-highlights svg { grid-row: span 2; color: #78994e; }
+.hostel-detail-highlights strong { color: #214f55; font-size: 0.78rem; }
+
+.hostel-amenities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 2rem;
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid #d9e2d8;
+}
+
+.hostel-amenities span {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #526466;
+  font-size: 0.8rem;
+}
+
+.hostel-amenities svg { color: #78994e; }
+
+.hostel-detail-aside {
+  align-self: start;
+  padding: 1.5rem;
+  border-top: 3px solid #78994e;
+  background: #eaf0e9;
+}
+
+.hostel-detail-aside h3 {
+  margin: 0;
+  color: #214f55;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.hostel-detail-aside > p:not(.hostel-detail-kicker) {
+  margin: 0.8rem 0 1.3rem;
+  color: #71807d;
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
+.hostel-detail-aside button {
+  width: 100%;
+  color: #fff;
+  background: #214f55;
+}
+
+.hostel-detail-aside button:hover { background: #173b40; }
+.hostel-detail-aside small { display: block; margin-top: 0.8rem; color: #78908a; font-size: 0.68rem; text-align: center; }
+
+@media (max-width: 820px) {
+  .hostel-detail-hero,
+  .hostel-detail-content { grid-template-columns: 1fr; gap: 2.5rem; }
+  .hostel-detail-summary { max-width: none; }
+  .hostel-detail-highlights { gap: 0.7rem; }
+}
+
+@media (max-width: 560px) {
+  .hostel-detail-inner { width: min(100% - 2rem, 1260px); }
+  .hostel-detail-image { box-shadow: 8px 8px 0 #d3dfc4; }
+  .hostel-detail-highlights,
+  .hostel-amenities { grid-template-columns: 1fr; }
+}
