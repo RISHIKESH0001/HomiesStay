@@ -11,8 +11,9 @@ const stays = [
 ];
 
 const StudentDashboard = () => {
-	const username = useSelector((state) => state.auth.user?.username || state.auth.user?.name || 'there');
-	const greeting = getTimeGreeting();
+	const user = useSelector((state) => state.auth.user);
+	const username = user?.username || user?.name || 'there';
+	const greeting = getTimeGreeting(new Date(), user?.timeZone || user?.timezone);
 	const [query, setQuery] = useState('');
 	const [savedHomes, setSavedHomes] = useState([]);
 	const visibleStays = useMemo(() => stays.filter((stay) => `${stay.name} ${stay.area}`.toLowerCase().includes(query.toLowerCase())), [query]);

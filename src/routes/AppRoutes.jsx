@@ -11,6 +11,7 @@ import About from '../pages/About/About';
 import Contact from '../pages/Contact/Contact';
 import Hostels from '../pages/Hostels/Hostels';
 import HostelDetails from '../pages/HostelDetails/HostelDetails';
+import Profile from '../pages/Profile/Profile';
 
 const ProtectedRoute = ({ children, role }) => {
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -44,6 +45,7 @@ const AppRoutes = () => {
 				<Route path="/" element={<Home />} />
 				<Route path="/hostels" element={<Hostels />} />
 				<Route path="/hostels/:hostelId" element={<HostelDetails />} />
+				<Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 				<Route path="/about" element={<About />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />

@@ -31,7 +31,7 @@ const NavBar = () => {
 					<>
 						<a className="site-navbar-dashboard" href={user?.role === 'owner' ? '/owner/dashboard' : user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'}><FiGrid /> Dashboard</a>
 						<button className="site-navbar-logout" type="button" onClick={handleLogout}><FiLogOut /> Logout</button>
-						<span className="site-navbar-user" title={user?.name || 'Signed-in user'} aria-label={`Signed in as ${user?.name || 'user'}`}>{user?.initials || 'HS'}</span>
+						<a className="site-navbar-user" href="/profile" title="Open profile" aria-label={`Open profile for ${user?.name || 'user'}`}>{user?.profileImage ? <img src={user.profileImage} alt="" /> : user?.initials || 'HS'}</a>
 					</>
 				) : (
 					<>

@@ -18,8 +18,9 @@ const initialApprovals = [
 ];
 
 const AdminDashboard = () => {
-	const username = useSelector((state) => state.auth.user?.username || state.auth.user?.name || 'Admin');
-	const greeting = getTimeGreeting();
+	const user = useSelector((state) => state.auth.user);
+	const username = user?.username || user?.name || 'Admin';
+	const greeting = getTimeGreeting(new Date(), user?.timeZone || user?.timezone);
 	const [approvals, setApprovals] = useState(initialApprovals);
 	const [activeTab, setActiveTab] = useState('Pending approvals');
 	const removeApproval = (name) => setApprovals((current) => current.filter((approval) => approval.name !== name));

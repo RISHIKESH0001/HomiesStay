@@ -16,6 +16,10 @@ const authSlice = createSlice({
 			state.user = action.payload;
 			window.localStorage.setItem('homies-stay-user', JSON.stringify(action.payload));
 		},
+		updateProfile: (state, action) => {
+			state.user = { ...state.user, ...action.payload };
+			window.localStorage.setItem('homies-stay-user', JSON.stringify(state.user));
+		},
 		logout: (state) => {
 			state.isAuthenticated = false;
 			state.user = null;
@@ -24,5 +28,5 @@ const authSlice = createSlice({
 	},
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, updateProfile, logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -49,7 +49,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 				</div>
 
 				<div className="dashboard-profile">
-					<div className="dashboard-avatar">{currentProfile.initials}</div>
+					<a className="dashboard-avatar" href="/profile" aria-label="Open profile">{currentProfile.profileImage ? <img src={currentProfile.profileImage} alt="" /> : currentProfile.initials}</a>
 					<div>
 						<strong>{currentProfile.name}</strong>
 						<span>{currentProfile.type}</span>
@@ -66,7 +66,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 						</a>
 					))}
 					<p className="dashboard-nav-label secondary">Account</p>
-					<a className="dashboard-nav-link" href="#profile" onClick={() => setIsSidebarOpen(false)}><FiUser /><span>{role === 'admin' ? 'Admin profile' : role === 'owner' ? 'Business profile' : 'My profile'}</span></a>
+					<a className="dashboard-nav-link" href="/profile" onClick={() => setIsSidebarOpen(false)}><FiUser /><span>{role === 'admin' ? 'Admin profile' : role === 'owner' ? 'Business profile' : 'My profile'}</span></a>
 					<a className="dashboard-nav-link" href="#settings" onClick={() => setIsSidebarOpen(false)}><FiSettings /><span>Settings</span></a>
 				</nav>
 
@@ -83,7 +83,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 					<div className="dashboard-top-actions">
 						<button className="dashboard-icon-button" type="button" aria-label="Search"><FiSearch /></button>
 						<button className="dashboard-icon-button notification-button" type="button" aria-label="Notifications"><FiBell /><i /></button>
-						<div className="dashboard-top-avatar">{currentProfile.initials}</div>
+						<a className="dashboard-top-avatar" href="/profile" aria-label="Open profile">{currentProfile.profileImage ? <img src={currentProfile.profileImage} alt="" /> : currentProfile.initials}</a>
 					</div>
 				</header>
 				{children}
