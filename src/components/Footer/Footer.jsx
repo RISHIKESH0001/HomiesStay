@@ -20,10 +20,10 @@ const Footer = () => {
 				<div className="footer-column">
 					<h2>For Students</h2>
 					<nav aria-label="Student links">
-						<a href="/hostels">Search Hostels</a>
-						<a href="/bookings">Bookings</a>
-						<a href="/reviews">Reviews</a>
-						<a href="/support">Support</a>
+						<a href="/hostels#hostel-search-form">Search hostels</a>
+						<a href="/dashboard#explore">Student dashboard</a>
+						<a href="/about#how-it-works">How it works</a>
+						<a href="/contact#ai-assistant">Contact support</a>
 					</nav>
 				</div>
 
