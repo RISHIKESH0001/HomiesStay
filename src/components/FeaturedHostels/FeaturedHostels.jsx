@@ -16,7 +16,7 @@ const featuredHostels = [
 		image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=900&q=85',
 	},
 	{
-		name: 'Olive House',
+		name: 'Olive House Madhapur',
 		location: 'Madhapur, Hyderabad',
 		price: 'Rs. 9,000',
 		rating: '4.9',

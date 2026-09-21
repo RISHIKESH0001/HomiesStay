@@ -687,17 +687,35 @@ select:focus-visible {
   gap: 0.45rem;
   align-items: center;
   white-space: nowrap;
-  transition: color 180ms ease, gap 180ms ease;
+  transition: color 180ms ease;
 }
 
-.property-card-link:hover {
-  gap: 0.7rem;
+.property-card-link span {
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+
+.property-card-link:hover span {
+  transform: translateX(0.2rem);
 }
 
 .property-card-link:hover,
 .featured-view-all:hover {
   color: #173b40;
 }
+
+.search-error,
+.hostels-search-error,
+.dashboard-search-error {
+  margin-top: 0.7rem;
+  color: #f0c7a7;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.search-error { color: #a34f3f; }
+.hostels-search-error { margin-inline: clamp(1.5rem, 7vw, 6rem); }
+.dashboard-search-error { grid-column: 2 / 3; margin-top: -0.4rem; color: #a34f3f; }
 
 .colleges-section {
   padding: clamp(3.5rem, 7vw, 6rem) clamp(1.5rem, 7vw, 6rem);
@@ -2198,6 +2216,83 @@ select:focus-visible {
 .hostels-area-card.yellow { background: #e1d49c; }
 .hostels-area-card.blue { background: #b9d1d1; }
 .hostels-area-card.rose { background: #dfc8ba; }
+
+.results-page {
+  color: #526466;
+  background: #fbfaf5;
+  text-align: left;
+}
+
+.results-hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 7vw, 6rem) clamp(3rem, 6vw, 5rem);
+  background: linear-gradient(115deg, #f6f3e7, #e5efea);
+}
+
+.results-hero > div:first-child { max-width: 760px; }
+.results-kicker { margin-bottom: 0.65rem; color: #78994e; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
+.results-hero h1 { max-width: 700px; margin: 0; color: #173b40; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.8rem, 6vw, 5.8rem); font-weight: 500; letter-spacing: -0.07em; line-height: 0.94; }
+.results-hero h1 em { color: #65853f; font-style: normal; }
+.results-hero > div:first-child > p:last-child { max-width: 440px; margin-top: 1.4rem; color: #5f706e; line-height: 1.65; }
+.results-hero-note { display: flex; align-items: center; gap: 0.75rem; min-width: 175px; padding: 0.9rem 1rem; border-left: 1px solid #aac0b3; color: #47746f; }
+.results-hero-note svg { width: 1.3rem; height: 1.3rem; }
+.results-hero-note span { display: flex; flex-direction: column; gap: 0.15rem; }
+.results-hero-note strong { color: #214f55; font-size: 0.76rem; }
+.results-hero-note small { color: #71807d; font-size: 0.75rem; }
+
+.results-content { display: grid; grid-template-columns: minmax(190px, 0.25fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); padding: clamp(3rem, 6vw, 5.5rem) clamp(1.5rem, 7vw, 6rem); }
+.results-filters { align-self: start; padding: 1.35rem; border-top: 3px solid #214f55; background: #fff; box-shadow: 0 10px 24px rgba(34, 67, 65, 0.06); }
+.results-filter-heading { display: flex; align-items: center; gap: 0.55rem; margin-bottom: 1.7rem; color: #214f55; }
+.results-filter-heading svg { width: 1.05rem; }
+.results-filter-heading h2 { margin: 0; color: #214f55; font-family: Georgia, 'Times New Roman', serif; font-size: 1.3rem; }
+.results-filters label { display: block; margin-bottom: 1.25rem; }
+.results-filters label span { display: block; margin-bottom: 0.45rem; color: #71807d; font-size: 0.72rem; font-weight: 800; }
+.results-filters select { width: 100%; padding: 0.7rem 0.6rem; border: 1px solid #cdd9d2; border-radius: 0.15rem; color: #214f55; background: #fbfaf5; font: inherit; font-size: 0.78rem; }
+.results-filter-note { display: flex; gap: 0.55rem; padding-top: 1rem; border-top: 1px solid #e5ece5; color: #78994e; }
+.results-filter-note svg { flex: 0 0 auto; margin-top: 0.12rem; }
+.results-filter-note p { color: #71807d; font-size: 0.72rem; line-height: 1.5; }
+.results-list-heading, .results-reviews-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
+.results-list-heading h2, .results-reviews h2 { margin: 0; color: #173b40; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 500; letter-spacing: -0.04em; }
+.results-list-heading > span { color: #78994e; font-size: 0.75rem; font-weight: 800; }
+.results-specific-stay { margin-top: 0.55rem; color: #71807d; font-size: 0.78rem; }
+.results-specific-stay strong { color: #47746f; }
+.results-card-wrap { position: relative; padding-top: 0.8rem; }
+.results-distance { position: absolute; top: 0; left: 0.9rem; z-index: 1; display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.45rem; color: #214f55; background: #d5e99a; font-size: 0.65rem; font-weight: 800; }
+.results-empty { padding: 3rem 1rem; border: 1px dashed #bdcdc4; text-align: center; }
+.results-empty h3 { margin: 0; color: #214f55; font-family: Georgia, 'Times New Roman', serif; font-size: 1.5rem; }
+.results-empty p { margin-top: 0.55rem; font-size: 0.85rem; }
+
+.results-reviews { padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 7vw, 6rem); background: #eaf0e9; }
+.results-reviews-heading > a { display: inline-flex; align-items: center; gap: 0.45rem; color: #47746f; font-size: 0.82rem; font-weight: 800; text-decoration: none; }
+.results-review-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.results-review { min-height: 205px; padding: 1.35rem; border: 1px solid #d5e0d7; background: #fff; }
+.results-review-rating { display: flex; align-items: center; gap: 0.35rem; color: #78994e; font-size: 0.75rem; font-weight: 800; }
+.results-review-rating svg { fill: currentColor; }
+.results-review > p { margin: 1.4rem 0 1.7rem; color: #214f55; font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; line-height: 1.45; }
+.results-review footer { display: flex; flex-direction: column; gap: 0.2rem; }
+.results-review footer strong { color: #214f55; font-size: 0.78rem; }
+.results-review footer span { color: #7b8b87; font-size: 0.72rem; }
+.results-review-empty { color: #71807d; font-size: 0.88rem; }
+
+@media (max-width: 800px) {
+  .results-hero, .results-list-heading, .results-reviews-heading { align-items: start; flex-direction: column; }
+  .results-hero-note { margin-top: 1rem; }
+  .results-content { grid-template-columns: 1fr; gap: 2.5rem; }
+  .results-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .results-filter-heading, .results-filter-note { grid-column: 1 / -1; }
+  .results-filters label { margin-bottom: 0; }
+  .results-review-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+  .results-filters { display: block; }
+  .results-filter-heading { margin-bottom: 1.2rem; }
+  .results-filters label { margin-bottom: 1rem; }
+  .results-filter-note { margin-top: 1rem; }
+}
 
 .hostels-area-card span {
   font-family: Georgia, 'Times New Roman', serif;
@@ -3875,6 +3970,42 @@ select:focus-visible {
 
 .hostel-amenities svg { color: #78994e; }
 
+.hostel-review-section { margin-top: 0.5rem; }
+
+.hostel-review-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.hostel-review {
+  padding: 1.2rem;
+  border: 1px solid #d9e2d8;
+  background: #fff;
+}
+
+.hostel-review-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.hostel-review-topline span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #78994e;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.hostel-review-topline svg { fill: currentColor; }
+.hostel-review-topline strong { color: #214f55; font-size: 0.78rem; }
+.hostel-review p { margin: 1rem 0 1.1rem; color: #526466; font-family: Georgia, 'Times New Roman', serif; font-size: 0.98rem; line-height: 1.5; }
+.hostel-review small { color: #8a9b98; font-size: 0.7rem; }
+
 .hostel-detail-aside {
   align-self: start;
   padding: 1.5rem;
@@ -3918,7 +4049,8 @@ select:focus-visible {
   .hostel-detail-inner { width: min(100% - 2rem, 1260px); }
   .hostel-detail-image { box-shadow: 8px 8px 0 #d3dfc4; }
   .hostel-detail-highlights,
-  .hostel-amenities { grid-template-columns: 1fr; }
+  .hostel-amenities,
+  .hostel-review-list { grid-template-columns: 1fr; }
 }
 
 .profile-page {

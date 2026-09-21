@@ -12,6 +12,7 @@ import Contact from '../pages/Contact/Contact';
 import Hostels from '../pages/Hostels/Hostels';
 import HostelDetails from '../pages/HostelDetails/HostelDetails';
 import Profile from '../pages/Profile/Profile';
+import SearchResults from '../pages/SearchResults/SearchResults';
 
 const ProtectedRoute = ({ children, role }) => {
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -44,6 +45,7 @@ const AppRoutes = () => {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/hostels" element={<Hostels />} />
+				<Route path="/search-results" element={<SearchResults />} />
 				<Route path="/hostels/:hostelId" element={<HostelDetails />} />
 				<Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 				<Route path="/about" element={<About />} />

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { FiArrowUpRight, FiClock, FiMapPin, FiNavigation, FiSliders } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
@@ -7,10 +8,16 @@ import PropertyCard from '../../components/PropertyCard/PropertyCard';
 const hostels = [
 	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', price: 'Rs. 8,500', rating: '4.8', image: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=900&q=85', tag: 'Best match' },
 	{ name: 'Campus Cove', location: 'Hinjewadi, Pune', college: 'Symbiosis Institute', price: 'Rs. 7,200', rating: '4.7', image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=900&q=85', tag: 'Popular nearby' },
-	{ name: 'Olive House', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', price: 'Rs. 9,000', rating: '4.9', image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=900&q=85', tag: 'Top rated' },
+	{ name: 'Olive House Madhapur', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', price: 'Rs. 9,000', rating: '4.9', image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=900&q=85', tag: 'Top rated' },
 	{ name: 'The Green Room', location: 'Salt Lake, Kolkata', college: 'IEM Kolkata', price: 'Rs. 6,800', rating: '4.6', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=85', tag: 'Value pick' },
 	{ name: 'North Star Living', location: 'New Town, Kolkata', college: 'Techno India', price: 'Rs. 7,900', rating: '4.8', image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=85', tag: 'New on Homies' },
 	{ name: 'Maple Co-Live', location: 'Viman Nagar, Pune', college: 'MIT World Peace University', price: 'Rs. 8,100', rating: '4.7', image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=85', tag: 'Move-in ready' },
+	{ name: 'Baruipur Student Nest', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 6,500', rating: '4.7', image: 'https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=900&q=85', tag: 'Campus nearby' },
+	{ name: 'Gargi Girls Residency', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 7,200', rating: '4.8', image: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=85', tag: 'Popular with students' },
+	{ name: 'South Campus Boys Home', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 5,900', rating: '4.6', image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=85', tag: 'Value pick' },
+	{ name: 'Greenfield Co-Living', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 8,100', rating: '4.9', image: 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=900&q=85', tag: 'Top rated' },
+	{ name: 'Baruipur Scholars Stay', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 6,800', rating: '4.7', image: 'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=900&q=85', tag: 'Study friendly' },
+	{ name: 'Lakeview Girls Hostel', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 7,600', rating: '4.8', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85', tag: 'Quiet stay' },
 ];
 
 const recentSearches = ['Salt Lake, Kolkata', 'IIT Kharagpur', 'Hostels under Rs. 8,000'];
@@ -21,11 +28,27 @@ const popularAreas = [
 	{ name: 'Hyderabad', detail: '154 verified stays', tone: 'rose' },
 ];
 
+const supportedLocations = [
+	{ name: 'Baruipur', latitude: 22.3654, longitude: 88.4325 },
+	{ name: 'Kolkata', latitude: 22.5726, longitude: 88.3639 },
+	{ name: 'Pune', latitude: 18.5204, longitude: 73.8567 },
+	{ name: 'Bengaluru', latitude: 12.9716, longitude: 77.5946 },
+	{ name: 'Hyderabad', latitude: 17.385, longitude: 78.4867 },
+];
+
+const getDistanceBetweenLocations = (latitude, longitude, location) => {
+	const latitudeDifference = (latitude - location.latitude) * 111;
+	const longitudeDifference = (longitude - location.longitude) * 111 * Math.cos((latitude * Math.PI) / 180);
+	return Math.sqrt(latitudeDifference ** 2 + longitudeDifference ** 2);
+};
+
 const Hostels = () => {
+	const navigate = useNavigate();
 	const [search, setSearch] = useState('');
 	const [location, setLocation] = useState('Kolkata');
 	const [budget, setBudget] = useState('');
 	const [locationStatus, setLocationStatus] = useState('Based on your location');
+	const [searchError, setSearchError] = useState('');
 
 	const filteredHostels = useMemo(() => {
 		const query = search.trim().toLowerCase();
@@ -39,9 +62,15 @@ const Hostels = () => {
 
 	const handleSearch = (event) => {
 		event.preventDefault();
-		const query = search.trim().toLowerCase();
-		const firstMatch = query ? hostels.find((hostel) => hostel.location.toLowerCase().includes(query)) : null;
-		if (firstMatch) setLocation(firstMatch.location.split(',')[1]?.trim() || firstMatch.location);
+		if (!search.trim()) {
+			setSearchError('Enter a city, area, college, or hostel name first.');
+			return;
+		}
+		setSearchError('');
+		const params = new URLSearchParams();
+		if (search.trim()) params.set('q', search.trim());
+		if (budget) params.set('budget', budget);
+		navigate(`/search-results?${params.toString()}`);
 	};
 
 	const useCurrentLocation = () => {
@@ -50,9 +79,14 @@ const Hostels = () => {
 			return;
 		}
 		navigator.geolocation.getCurrentPosition(
-			() => {
-				setLocation('Near you');
-				setLocationStatus('Using your current location');
+			(position) => {
+				const nearestLocation = supportedLocations.reduce((nearest, candidate) => {
+					const candidateDistance = getDistanceBetweenLocations(position.coords.latitude, position.coords.longitude, candidate);
+					return candidateDistance < nearest.distance ? { location: candidate, distance: candidateDistance } : nearest;
+				}, { location: supportedLocations[0], distance: Number.POSITIVE_INFINITY }).location;
+				setLocation(nearestLocation.name);
+				setLocationStatus('Showing stays near your location');
+				navigate(`/search-results?location=${encodeURIComponent(nearestLocation.name)}`);
 			},
 			() => setLocationStatus('Location permission needed'),
 			{ enableHighAccuracy: false, timeout: 5000 },
@@ -74,7 +108,7 @@ const Hostels = () => {
 						<label className="hostels-search-field hostels-search-field-wide"><span>Where are you headed?</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="City, area, college or hostel name" /></label>
 						<label className="hostels-search-field"><span>Monthly budget</span><select value={budget} onChange={(event) => setBudget(event.target.value)}><option value="">Any budget</option><option value="under-8000">Under Rs. 8,000</option><option value="8000-10000">Rs. 8,000 - 10,000</option></select></label>
 						<button className="hostels-search-button" type="submit">Search stays <FiArrowUpRight aria-hidden="true" /></button>
-					</form>
+					</form>{searchError && <p className="hostels-search-error" role="alert">{searchError}</p>}
 					<div className="hostels-search-meta"><span><FiClock aria-hidden="true" /> Recently searched</span>{recentSearches.map((item) => <button key={item} type="button" onClick={() => setSearch(item.split(',')[0])}>{item}</button>)}<button className="hostels-use-location" type="button" onClick={useCurrentLocation}><FiNavigation aria-hidden="true" /> Use current location</button></div>
 				</section>
 
@@ -82,7 +116,7 @@ const Hostels = () => {
 
 				<section className="hostels-section hostels-browse" aria-labelledby="browse-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Make it yours</p><h2 id="browse-title">Browse all stays</h2><p>{filteredHostels.length} verified homes ready for your move.</p></div></div><div className="property-grid">{filteredHostels.map((hostel) => <PropertyCard key={hostel.name} hostel={hostel} />)}</div>{filteredHostels.length === 0 && <div className="hostels-empty"><h3>No exact matches yet.</h3><p>Try a nearby city, college, or a wider budget.</p><button type="button" onClick={() => { setSearch(''); setBudget(''); }}>Clear search</button></div>}</section>
 
-				<section className="hostels-areas" aria-labelledby="areas-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Know your neighbourhood</p><h2 id="areas-title">Popular student areas</h2></div><a href="/hostels">Explore all areas <FiArrowUpRight aria-hidden="true" /></a></div><div className="hostels-area-grid">{popularAreas.map((area) => <a className={`hostels-area-card ${area.tone}`} href="/hostels" key={area.name}><span>{area.name}</span><small>{area.detail}</small><FiArrowUpRight aria-hidden="true" /></a>)}</div></section>
+				<section className="hostels-areas" aria-labelledby="areas-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Know your neighbourhood</p><h2 id="areas-title">Popular student areas</h2></div><a href="/hostels">Explore all areas <FiArrowUpRight aria-hidden="true" /></a></div><div className="hostels-area-grid">{popularAreas.map((area) => <a className={`hostels-area-card ${area.tone}`} href={`/search-results?location=${encodeURIComponent(area.name)}`} key={area.name}><span>{area.name}</span><small>{area.detail}</small><FiArrowUpRight aria-hidden="true" /></a>)}</div></section>
 
 				<section className="hostels-trust"><div><p className="hostels-kicker">A little less uncertainty</p><h2>Every listing is checked for the details that matter.</h2></div><div className="hostels-trust-points"><span><strong>01</strong>Verified properties</span><span><strong>02</strong>Transparent pricing</span><span><strong>03</strong>Student reviews</span></div></section>
 			</main>

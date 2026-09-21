@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { FiArrowUpRight, FiBookmark, FiChevronRight, FiMapPin, FiMessageCircle, FiSearch, FiStar } from 'react-icons/fi';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import { getTimeGreeting } from '../../utils/greeting';
@@ -11,15 +12,27 @@ const stays = [
 ];
 
 const StudentDashboard = () => {
+	const navigate = useNavigate();
 	const user = useSelector((state) => state.auth.user);
 	const username = user?.username || user?.name || 'there';
 	const greeting = getTimeGreeting(new Date(), user?.timeZone || user?.timezone);
 	const [query, setQuery] = useState('');
 	const [savedHomes, setSavedHomes] = useState([]);
+	const [searchError, setSearchError] = useState('');
 	const visibleStays = useMemo(() => stays.filter((stay) => `${stay.name} ${stay.area}`.toLowerCase().includes(query.toLowerCase())), [query]);
 
 	const toggleSaved = (name) => {
 		setSavedHomes((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
+	};
+
+	const handleSearch = () => {
+		const trimmedQuery = query.trim();
+		if (!trimmedQuery) {
+			setSearchError('Enter a neighbourhood, college, or landmark first.');
+			return;
+		}
+		setSearchError('');
+		navigate(trimmedQuery ? `/search-results?q=${encodeURIComponent(trimmedQuery)}` : '/search-results');
 	};
 
 	return (
@@ -37,7 +50,8 @@ const StudentDashboard = () => {
 				<section className="dashboard-search-panel" aria-label="Find a home">
 					<div className="dashboard-search-copy"><span className="dashboard-search-icon"><FiMapPin /></span><div><strong>Where do you want to live?</strong><span>Search by neighbourhood, college, or landmark</span></div></div>
 					<div className="dashboard-search-input"><FiSearch /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Koramangala or Christ University" aria-label="Search homes" /></div>
-					<button className="dashboard-search-button" type="button">Search</button>
+					<button className="dashboard-search-button" type="button" onClick={handleSearch}>Search</button>
+					{searchError && <p className="dashboard-search-error" role="alert">{searchError}</p>}
 				</section>
 
 				<section className="dashboard-stats" aria-label="Your activity">

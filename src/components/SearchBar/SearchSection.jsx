@@ -1,20 +1,34 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
 
 const SearchSection = () => {
+	const navigate = useNavigate();
 	const [search, setSearch] = useState({
 		college: '',
 		location: '',
 		budget: '',
 	});
+	const [searchError, setSearchError] = useState('');
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
 		setSearch((currentSearch) => ({ ...currentSearch, [name]: value }));
+		if (name !== 'budget' && value.trim()) setSearchError('');
 	};
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
+		if (!search.college.trim() && !search.location.trim()) {
+			setSearchError('Enter a college, hostel name, city, or neighbourhood to search.');
+			return;
+		}
+		setSearchError('');
+		const params = new URLSearchParams();
+		if (search.college.trim()) params.set('college', search.college.trim());
+		if (search.location.trim()) params.set('location', search.location.trim());
+		if (search.budget) params.set('budget', search.budget);
+		navigate(`/search-results?${params.toString()}`);
 	};
 
 	return (
@@ -27,12 +41,12 @@ const SearchSection = () => {
 
 			<form className="search-form" onSubmit={handleSubmit}>
 				<label className="search-field">
-					<span>College Name</span>
+					<span>College or hostel name</span>
 					<input
 						name="college"
 						value={search.college}
 						onChange={handleChange}
-						placeholder="Choose your college"
+						placeholder="Search a college or hostel"
 						autoComplete="organization"
 					/>
 				</label>
@@ -62,6 +76,7 @@ const SearchSection = () => {
 					Search <span aria-hidden="true">&rarr;</span>
 				</Button>
 			</form>
+			{searchError && <p className="search-error" role="alert">{searchError}</p>}
 		</section>
 	);
 };
