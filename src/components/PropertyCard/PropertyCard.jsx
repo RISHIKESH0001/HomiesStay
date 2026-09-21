@@ -21,6 +21,7 @@ const PropertyCard = ({ hostel }) => {
 						{hostel.rating}
 					</span>
 				</div>
+				{hostel.gender && <span className="property-card-gender">{hostel.gender} hostel</span>}
 				<div className="property-card-footer">
 					<p className="property-card-price">
 						<strong>{hostel.price}</strong> <span>/ month</span>

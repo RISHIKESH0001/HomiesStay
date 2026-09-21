@@ -1,4 +1,5 @@
 import Button from '../common/Button';
+import { roomShared } from '../../assets/hostelImages';
 
 const Hero = () => {
 	return (
@@ -23,7 +24,7 @@ const Hero = () => {
 			<div className="hero-visual">
 				<div className="hero-image-frame">
 					<img
-						src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=85"
+						 src={roomShared}
 						alt="Bright, modern shared hostel room"
 					/>
 					<div className="hero-image-label">

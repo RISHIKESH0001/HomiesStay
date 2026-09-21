@@ -4,23 +4,24 @@ import { useSearchParams } from 'react-router-dom';
 import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
+import { roomBaruipur1, roomBaruipur2, roomBaruipur3, roomBaruipur4, roomBaruipur5, roomBengaluru1, roomHyderabad1, roomKolkata1, roomKolkata2, roomModern1, roomModern2, roomModern3, roomPune1, roomPune2, roomWorkspace } from '../../assets/hostelImages';
 
 const hostels = [
-	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 8,500', rating: '4.8', distance: 1.2, image: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Casa Nook', location: 'HSR Layout, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 12,800', rating: '4.8', distance: 2.8, image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Mango Tree Living', location: 'Indiranagar, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 11,500', rating: '4.7', distance: 4.5, image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'The Olive House', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 14,500', rating: '4.9', distance: 1.5, image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Campus Cove', location: 'Hinjewadi, Pune', college: 'Symbiosis Institute', gender: 'Unisex', price: 'Rs. 7,200', rating: '4.7', distance: 1.8, image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Maple Co-Live', location: 'Viman Nagar, Pune', college: 'MIT World Peace University', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.7', distance: 3.4, image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Olive House Madhapur', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', gender: 'Unisex', price: 'Rs. 9,000', rating: '4.9', distance: 2.1, image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'The Green Room', location: 'Salt Lake, Kolkata', college: 'IEM Kolkata', gender: 'Unisex', price: 'Rs. 6,800', rating: '4.6', distance: 1.4, image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'North Star Living', location: 'New Town, Kolkata', college: 'Techno India', gender: 'Unisex', price: 'Rs. 7,900', rating: '4.8', distance: 4.2, image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Baruipur Student Nest', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 6,500', rating: '4.7', distance: 0.9, image: 'https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Gargi Girls Residency', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,200', rating: '4.8', distance: 1.1, image: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'South Campus Boys Home', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 5,900', rating: '4.6', distance: 1.4, image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Greenfield Co-Living', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.9', distance: 1.8, image: 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Baruipur Scholars Stay', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 6,800', rating: '4.7', distance: 2.3, image: 'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=900&q=85' },
-	{ name: 'Lakeview Girls Hostel', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,600', rating: '4.8', distance: 2.7, image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85' },
+	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 8,500', rating: '4.8', distance: 1.2, image: roomBengaluru1 },
+	{ name: 'Casa Nook', location: 'HSR Layout, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 12,800', rating: '4.8', distance: 2.8, image: roomModern2 },
+	{ name: 'Mango Tree Living', location: 'Indiranagar, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 11,500', rating: '4.7', distance: 4.5, image: roomModern3 },
+	{ name: 'The Olive House', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 14,500', rating: '4.9', distance: 1.5, image: roomHyderabad1 },
+	{ name: 'Campus Cove', location: 'Hinjewadi, Pune', college: 'Symbiosis Institute', gender: 'Unisex', price: 'Rs. 7,200', rating: '4.7', distance: 1.8, image: roomPune1 },
+	{ name: 'Maple Co-Live', location: 'Viman Nagar, Pune', college: 'MIT World Peace University', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.7', distance: 3.4, image: roomPune2 },
+	{ name: 'Olive House Madhapur', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', gender: 'Unisex', price: 'Rs. 9,000', rating: '4.9', distance: 2.1, image: roomModern1 },
+	{ name: 'The Green Room', location: 'Salt Lake, Kolkata', college: 'IEM Kolkata', gender: 'Unisex', price: 'Rs. 6,800', rating: '4.6', distance: 1.4, image: roomKolkata1 },
+	{ name: 'North Star Living', location: 'New Town, Kolkata', college: 'Techno India', gender: 'Unisex', price: 'Rs. 7,900', rating: '4.8', distance: 4.2, image: roomKolkata2 },
+	{ name: 'Baruipur Student Nest', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 6,500', rating: '4.7', distance: 0.9, image: roomBaruipur1 },
+	{ name: 'Gargi Girls Residency', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,200', rating: '4.8', distance: 1.1, image: roomBaruipur4 },
+	{ name: 'South Campus Boys Home', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 5,900', rating: '4.6', distance: 1.4, image: roomWorkspace },
+	{ name: 'Greenfield Co-Living', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.9', distance: 1.8, image: roomBaruipur3 },
+	{ name: 'Baruipur Scholars Stay', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 6,800', rating: '4.7', distance: 2.3, image: roomBaruipur2 },
+	{ name: 'Lakeview Girls Hostel', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,600', rating: '4.8', distance: 2.7, image: roomBaruipur5 },
 ];
 
 const reviews = [

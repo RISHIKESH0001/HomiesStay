@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FiArrowUpRight, FiCheck, FiClipboard, FiHome, FiMapPin, FiSearch, FiShield, FiUsers } from 'react-icons/fi';
 import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
+import { roomShared } from '../../assets/hostelImages';
 
 const roleContent = {
 	students: {
@@ -50,7 +51,7 @@ const About = () => {
 			<main className="about-page">
 				<section className="about-hero">
 					<div className="about-hero-copy"><p className="about-kicker">About Homies Stay</p><h1>Room for the life you are <em>building.</em></h1><p>Homies Stay is a student accommodation marketplace built to make finding, listing, and managing a stay feel more human.</p><div className="about-hero-actions"><a className="about-primary-link" href="/hostels">Find your stay <FiArrowUpRight aria-hidden="true" /></a><a className="about-text-link" href="#how-it-works">See how it works <FiArrowUpRight aria-hidden="true" /></a></div></div>
-					<div className="about-hero-visual"><img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1200&q=85" alt="Bright shared bedroom with comfortable study space" /><div className="about-image-note"><span className="about-image-dot" aria-hidden="true" /><span><strong>Built around real routines</strong><small>Campus, commute, comfort</small></span></div></div>
+					<div className="about-hero-visual"><img src={roomShared} alt="Bright shared bedroom with comfortable study space" /><div className="about-image-note"><span className="about-image-dot" aria-hidden="true" /><span><strong>Built around real routines</strong><small>Campus, commute, comfort</small></span></div></div>
 				</section>
 
 				<section className="about-intro"><p className="about-kicker">Why we exist</p><div className="about-intro-grid"><h2>Finding a room should not feel like finding your way through a maze.</h2><div><p>Moving for college or work is a big enough change. The search for a safe, affordable place to live should bring clarity, not more uncertainty.</p><p>Homies Stay brings the important pieces together: relevant locations, clear pricing, useful details, trusted reviews, and a direct way to connect with the people behind each listing.</p></div></div><div className="about-stats"><div><strong>500+</strong><span>hostels and PGs</span></div><div><strong>100+</strong><span>college neighbourhoods</span></div><div><strong>5,000+</strong><span>students finding their place</span></div></div></section>

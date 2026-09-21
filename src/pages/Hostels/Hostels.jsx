@@ -4,20 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
+import { roomBaruipur1, roomBaruipur2, roomBaruipur3, roomBaruipur4, roomBaruipur5, roomBengaluru1, roomHyderabad1, roomKolkata1, roomKolkata2, roomPune1, roomPune2, roomWorkspace } from '../../assets/hostelImages';
 
 const hostels = [
-	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', price: 'Rs. 8,500', rating: '4.8', image: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=900&q=85', tag: 'Best match' },
-	{ name: 'Campus Cove', location: 'Hinjewadi, Pune', college: 'Symbiosis Institute', price: 'Rs. 7,200', rating: '4.7', image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=900&q=85', tag: 'Popular nearby' },
-	{ name: 'Olive House Madhapur', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', price: 'Rs. 9,000', rating: '4.9', image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=900&q=85', tag: 'Top rated' },
-	{ name: 'The Green Room', location: 'Salt Lake, Kolkata', college: 'IEM Kolkata', price: 'Rs. 6,800', rating: '4.6', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=85', tag: 'Value pick' },
-	{ name: 'North Star Living', location: 'New Town, Kolkata', college: 'Techno India', price: 'Rs. 7,900', rating: '4.8', image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=85', tag: 'New on Homies' },
-	{ name: 'Maple Co-Live', location: 'Viman Nagar, Pune', college: 'MIT World Peace University', price: 'Rs. 8,100', rating: '4.7', image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=85', tag: 'Move-in ready' },
-	{ name: 'Baruipur Student Nest', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 6,500', rating: '4.7', image: 'https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=900&q=85', tag: 'Campus nearby' },
-	{ name: 'Gargi Girls Residency', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 7,200', rating: '4.8', image: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=85', tag: 'Popular with students' },
-	{ name: 'South Campus Boys Home', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 5,900', rating: '4.6', image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=85', tag: 'Value pick' },
-	{ name: 'Greenfield Co-Living', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 8,100', rating: '4.9', image: 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=900&q=85', tag: 'Top rated' },
-	{ name: 'Baruipur Scholars Stay', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 6,800', rating: '4.7', image: 'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=900&q=85', tag: 'Study friendly' },
-	{ name: 'Lakeview Girls Hostel', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', price: 'Rs. 7,600', rating: '4.8', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85', tag: 'Quiet stay' },
+	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 8,500', rating: '4.8', image: roomBengaluru1, tag: 'Best match' },
+	{ name: 'Campus Cove', location: 'Hinjewadi, Pune', college: 'Symbiosis Institute', gender: 'Unisex', price: 'Rs. 7,200', rating: '4.7', image: roomPune1, tag: 'Popular nearby' },
+	{ name: 'Olive House Madhapur', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', gender: 'Unisex', price: 'Rs. 9,000', rating: '4.9', image: roomHyderabad1, tag: 'Top rated' },
+	{ name: 'The Green Room', location: 'Salt Lake, Kolkata', college: 'IEM Kolkata', gender: 'Unisex', price: 'Rs. 6,800', rating: '4.6', image: roomKolkata1, tag: 'Value pick' },
+	{ name: 'North Star Living', location: 'New Town, Kolkata', college: 'Techno India', gender: 'Unisex', price: 'Rs. 7,900', rating: '4.8', image: roomKolkata2, tag: 'New on Homies' },
+	{ name: 'Maple Co-Live', location: 'Viman Nagar, Pune', college: 'MIT World Peace University', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.7', image: roomPune2, tag: 'Move-in ready' },
+	{ name: 'Baruipur Student Nest', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 6,500', rating: '4.7', image: roomBaruipur1, tag: 'Campus nearby' },
+	{ name: 'Gargi Girls Residency', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,200', rating: '4.8', image: roomBaruipur4, tag: 'Popular with students' },
+	{ name: 'South Campus Boys Home', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 5,900', rating: '4.6', image: roomWorkspace, tag: 'Value pick' },
+	{ name: 'Greenfield Co-Living', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.9', image: roomBaruipur3, tag: 'Top rated' },
+	{ name: 'Baruipur Scholars Stay', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 6,800', rating: '4.7', image: roomBaruipur2, tag: 'Study friendly' },
+	{ name: 'Lakeview Girls Hostel', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,600', rating: '4.8', image: roomBaruipur5, tag: 'Quiet stay' },
 ];
 
 const recentSearches = ['Salt Lake, Kolkata', 'IIT Kharagpur', 'Hostels under Rs. 8,000'];
