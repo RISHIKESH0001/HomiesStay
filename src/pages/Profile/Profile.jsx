@@ -27,7 +27,7 @@ const Profile = () => {
 	return (
 		<main className={`profile-page profile-page-${role}`}>
 			<div className="profile-page-inner">
-				<header className="profile-page-header"><a className="profile-back-link" href={config.back}><FiArrowLeft /> Back to dashboard</a><div className="profile-header-actions"><a href={`${config.back}#settings`}><FiSettings /> Settings</a><button type="button" onClick={handleLogout}><FiLogOut /> Log out</button></div></header>
+				<header className="profile-page-header"><a className="profile-back-link" href={config.back}><FiArrowLeft /> Back to dashboard</a><div className="profile-header-actions"><a href="/settings"><FiSettings /> Settings</a><button type="button" onClick={handleLogout}><FiLogOut /> Log out</button></div></header>
 				<section className="profile-page-title"><div className="profile-page-avatar">{user?.profileImage ? <img src={user.profileImage} alt="Current profile" /> : user?.initials || 'HS'}</div><div><p className="profile-kicker">{config.label}</p><h1>{config.title}</h1><p>Keep your information current so Homies Stay can work better for you.</p></div></section>
 				{role === 'owner' ? <OwnerProfile user={user} /> : role === 'admin' ? <AdminProfile user={user} /> : <StudentProfile user={user} />}
 			</div>

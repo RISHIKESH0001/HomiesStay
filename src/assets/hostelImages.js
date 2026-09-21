@@ -15,6 +15,7 @@ import roomPune2 from './images/room-pune-2.jpg';
 import roomShared from './images/room-shared.jpg';
 import roomStudy from './images/room-study.jpg';
 import roomWorkspace from './images/room-workspace.jpg';
+import heroAbout from './images/hero-about.jpg';
 
 export {
 	roomBaruipur1,
@@ -34,4 +35,5 @@ export {
 	roomShared,
 	roomStudy,
 	roomWorkspace,
+	heroAbout,
 };

@@ -106,7 +106,7 @@ select:focus-visible {
 
 .site-navbar-links a:hover,
 .site-navbar-auth a:hover {
-  color: #2563eb;
+  color: var(--user-hover-accent, #5f7f3c);
 }
 
 .site-navbar-dashboard,
@@ -191,7 +191,7 @@ select:focus-visible {
 }
 
 .site-navbar-register:hover {
-  background: #1d4ed8;
+  background: var(--user-hover-accent, #1d4ed8);
 }
 
 .hero-section {
@@ -584,6 +584,7 @@ select:focus-visible {
 }
 
 .property-card:hover {
+  background: var(--user-hover-surface, #fff);
   box-shadow: 0 16px 32px rgba(34, 67, 65, 0.12);
   transform: translateY(-5px);
 }
@@ -713,7 +714,7 @@ select:focus-visible {
 
 .property-card-link:hover,
 .featured-view-all:hover {
-  color: #173b40;
+  color: var(--user-hover-accent, #173b40);
 }
 
 .search-error,
@@ -1894,7 +1895,7 @@ select:focus-visible {
   padding: clamp(4rem, 9vw, 8rem) clamp(1.5rem, 7vw, 6rem) clamp(3rem, 6vw, 5rem);
   background:
     linear-gradient(115deg, rgba(248, 246, 235, 0.9), rgba(229, 239, 234, 0.86)),
-    url('./assets/images/room-shared.jpg') center / cover;
+    url('./assets/images/hero-hostels.jpg') center / cover;
 }
 
 .hostels-hero-copy {
@@ -3400,10 +3401,10 @@ select:focus-visible {
 
 /* Dashboard workspace */
 .dashboard-shell {
-  --dashboard-ink: #183d3e;
-  --dashboard-muted: #718180;
-  --dashboard-paper: #f7f8f3;
-  --dashboard-line: #e4e9e1;
+  --dashboard-ink: var(--dashboard-ink-user, #183d3e);
+  --dashboard-muted: var(--dashboard-muted-user, #718180);
+  --dashboard-paper: var(--dashboard-page, #f7f8f3);
+  --dashboard-line: var(--dashboard-line-user, #e4e9e1);
   --dashboard-lime: #c4dc78;
   display: flex;
   min-height: 100svh;
@@ -3420,8 +3421,8 @@ select:focus-visible {
   height: 100svh;
   flex-direction: column;
   padding: 2rem 1.25rem 1.4rem;
-  color: #dce8df;
-  background: #173b3d;
+  color: var(--dashboard-sidebar-text-user, #dce8df);
+  background: var(--dashboard-sidebar-user, #173b3d);
 }
 
 .dashboard-brand-row {
@@ -3500,7 +3501,7 @@ select:focus-visible {
 .dashboard-logout:hover { color: #fff; }
 
 .dashboard-main { width: calc(100% - 254px); min-width: 0; margin-left: 254px; }
-.dashboard-topbar { display: flex; height: 78px; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem, 4vw, 4.5rem); border-bottom: 1px solid var(--dashboard-line); background: rgba(247, 248, 243, 0.88); }
+.dashboard-topbar { display: flex; height: 78px; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem, 4vw, 4.5rem); border-bottom: 1px solid var(--dashboard-line); background: var(--dashboard-paper); }
 .dashboard-breadcrumb { display: flex; align-items: center; gap: 0.7rem; color: #9aa9a2; font-size: 0.72rem; }
 .dashboard-breadcrumb b { color: #c0c9c0; font-weight: 400; }
 .dashboard-breadcrumb strong { color: var(--dashboard-ink); font-weight: 750; }
@@ -3522,7 +3523,7 @@ select:focus-visible {
 .dashboard-primary-action svg:last-child { width: 0.85rem; margin-left: 0.25rem; }
 .dashboard-primary-action:hover { background: #d6ec94; transform: translateY(-2px); }
 
-.dashboard-search-panel { display: grid; grid-template-columns: 1.15fr 1.35fr auto; align-items: center; gap: 1.2rem; margin-top: 2.8rem; padding: 1rem 1.1rem; border: 1px solid #dfe7dc; border-radius: 0.45rem; background: #fff; box-shadow: 0 12px 30px rgba(38, 70, 61, 0.05); }
+.dashboard-search-panel { display: grid; grid-template-columns: 1.15fr 1.35fr auto; align-items: center; gap: 1.2rem; margin-top: 2.8rem; padding: 1rem 1.1rem; border: 1px solid var(--dashboard-line); border-radius: 0.45rem; background: var(--dashboard-surface, #fff); box-shadow: 0 12px 30px rgba(38, 70, 61, 0.05); }
 .dashboard-search-copy, .dashboard-search-input { display: flex; align-items: center; gap: 0.7rem; }
 .dashboard-search-icon { display: grid; width: 2.15rem; height: 2.15rem; flex: 0 0 auto; place-items: center; border-radius: 50%; color: #65885e; background: #eff5df; }
 .dashboard-search-icon svg { width: 1rem; }
@@ -3537,7 +3538,7 @@ select:focus-visible {
 .dashboard-search-button:hover { background: #173b40; }
 
 .dashboard-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
-.dashboard-stat-card { display: flex; align-items: center; gap: 0.75rem; min-height: 6rem; padding: 1rem; border: 1px solid var(--dashboard-line); border-radius: 0.35rem; background: #fff; }
+.dashboard-stat-card { display: flex; align-items: center; gap: 0.75rem; min-height: 6rem; padding: 1rem; border: 1px solid var(--dashboard-line); border-radius: 0.35rem; background: var(--dashboard-surface, #fff); }
 .stat-icon, .activity-mark { display: grid; place-items: center; border-radius: 50%; }
 .stat-icon { width: 2.3rem; height: 2.3rem; flex: 0 0 auto; }
 .stat-icon svg { width: 1rem; }
@@ -3556,7 +3557,7 @@ select:focus-visible {
 .dashboard-section-heading > a:hover { color: var(--dashboard-ink); }
 .dashboard-section-heading > a svg { width: 0.85rem; }
 .dashboard-stay-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.dashboard-stay-card { overflow: hidden; border: 1px solid var(--dashboard-line); border-radius: 0.4rem; background: #fff; transition: transform 180ms ease, box-shadow 180ms ease; }
+.dashboard-stay-card { overflow: hidden; border: 1px solid var(--dashboard-line); border-radius: 0.4rem; background: var(--dashboard-surface, #fff); transition: transform 180ms ease, box-shadow 180ms ease; }
 .dashboard-stay-card:hover { box-shadow: 0 18px 35px rgba(38, 70, 61, 0.1); transform: translateY(-4px); }
 .dashboard-stay-image { position: relative; display: grid; height: 10.5rem; place-items: center; overflow: hidden; }
 .dashboard-stay-image::before, .dashboard-stay-image::after { position: absolute; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; content: ''; }
@@ -4018,6 +4019,225 @@ select:focus-visible {
 .hostel-review p { margin: 1rem 0 1.1rem; color: #526466; font-family: Georgia, 'Times New Roman', serif; font-size: 0.98rem; line-height: 1.5; }
 .hostel-review small { color: #8a9b98; font-size: 0.7rem; }
 
+.settings-page {
+  min-height: 100%;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.25rem, 4vw, 4rem) 5rem;
+  color: #526466;
+  background: var(--user-page, #fbfaf5);
+  text-align: left;
+}
+
+.settings-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+}
+
+.settings-header h1 { max-width: 720px; margin: 0; color: var(--user-text, #173b40); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.4rem, 5vw, 4.8rem); font-weight: 500; letter-spacing: -0.07em; line-height: 0.95; }
+.settings-header > div > p:last-child { max-width: 560px; margin-top: 1rem; color: #71807d; font-size: 0.9rem; line-height: 1.6; }
+.settings-header-actions { display: flex; align-items: center; justify-content: end; flex-wrap: wrap; gap: 0.6rem; }
+.settings-preview-badge { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--user-accent, #47746f); font-size: 0.7rem; font-weight: 800; }
+.settings-save-button, .settings-discard-button { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.9rem; padding: 0 1rem; border: 0; cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 800; }
+.settings-save-button { color: #fff; background: var(--user-accent, #214f55); }
+.settings-discard-button { color: var(--user-text, #47746f); background: transparent; }
+.settings-save-button:hover { filter: brightness(0.9); }
+.settings-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 1100px; margin: 0 auto; }
+.settings-panel { padding: clamp(1.25rem, 3vw, 1.8rem); border: 1px solid #d9e2d8; background: var(--user-surface, #fff); box-shadow: 0 10px 24px rgba(34, 67, 65, 0.05); }
+.settings-theme-panel { grid-column: 1 / -1; }
+.settings-panel-heading { display: flex; align-items: start; gap: 0.8rem; margin-bottom: 1.6rem; }
+.settings-panel-icon { display: grid; width: 2.35rem; height: 2.35rem; flex: 0 0 auto; place-items: center; color: var(--user-accent, #78994e); background: #edf4d8; }
+.settings-panel-icon svg { width: 1.05rem; }
+.settings-panel h2 { margin: 0; color: var(--user-text, #173b40); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.45rem, 2.4vw, 2.1rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.05; }
+.settings-theme-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; }
+.settings-theme-option { display: flex; min-height: 8.2rem; flex-direction: column; align-items: start; gap: 0.3rem; padding: 1rem; border: 1px solid #d9e2d8; color: #71807d; background: transparent; cursor: pointer; text-align: left; }
+.settings-theme-option svg { width: 1.1rem; height: 1.1rem; margin-bottom: 0.5rem; color: var(--user-accent, #78994e); }
+.settings-theme-option strong { color: var(--user-text, #214f55); font-size: 0.82rem; }
+.settings-theme-option span { font-size: 0.7rem; line-height: 1.35; }
+.settings-theme-option.active { border-color: var(--user-accent, #78994e); box-shadow: inset 0 0 0 1px var(--user-accent, #78994e); background: #f5f8f1; }
+.settings-inline-note { display: flex; align-items: center; gap: 0.45rem; margin-top: 1rem; color: #71807d; font-size: 0.73rem; }
+.settings-color-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin-top: 1.2rem; }
+.settings-color-grid label { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; color: #71807d; font-size: 0.7rem; }
+.settings-color-grid input { width: 2.2rem; height: 2rem; padding: 0.15rem; border: 1px solid #d9e2d8; background: transparent; cursor: pointer; }
+.settings-select-row, .settings-toggle-row, .settings-info-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-top: 1px solid #e5ece5; }
+.settings-select-row span, .settings-toggle-row span, .settings-info-row span { display: flex; flex-direction: column; gap: 0.25rem; }
+.settings-select-row strong, .settings-toggle-row strong, .settings-info-row strong { color: var(--user-text, #214f55); font-size: 0.8rem; }
+.settings-select-row small, .settings-toggle-row small, .settings-info-row small { max-width: 480px; color: #71807d; font-size: 0.72rem; line-height: 1.45; }
+.settings-select-row select { min-width: 130px; padding: 0.55rem; border: 1px solid #cdd9d2; color: #214f55; background: var(--user-page, #fbfaf5); font: inherit; font-size: 0.75rem; }
+.settings-toggle-row input { width: 2.5rem; height: 1.35rem; accent-color: var(--user-accent, #78994e); }
+.settings-info-row { justify-content: start; }
+.settings-info-row > svg { flex: 0 0 auto; color: var(--user-accent, #78994e); }
+.settings-status { display: flex; align-items: center; gap: 0.4rem; max-width: 1100px; margin: 1rem auto 0; color: #668342; font-size: 0.76rem; }
+
+html[data-theme='night'] body,
+html[data-theme='custom'] body { background: var(--user-page); color: var(--user-text); }
+html[data-theme='night'] .site-navbar,
+html[data-theme='custom'] .site-navbar,
+html[data-theme='night'] .site-footer,
+html[data-theme='custom'] .site-footer { border-color: rgba(210, 230, 220, 0.18); background: var(--user-surface); color: var(--user-text); }
+html[data-theme='night'] .hostels-page,
+html[data-theme='custom'] .hostels-page,
+html[data-theme='night'] .about-page,
+html[data-theme='custom'] .about-page,
+html[data-theme='night'] .contact-page,
+html[data-theme='custom'] .contact-page,
+html[data-theme='night'] .results-page,
+html[data-theme='custom'] .results-page,
+html[data-theme='night'] .hostel-detail-page,
+html[data-theme='custom'] .hostel-detail-page { background: var(--user-page); color: var(--user-text); }
+html[data-theme='night'] .featured-section,
+html[data-theme='custom'] .featured-section,
+html[data-theme='night'] .hostels-section,
+html[data-theme='custom'] .hostels-section,
+html[data-theme='night'] .results-content,
+html[data-theme='custom'] .results-content,
+html[data-theme='night'] .hostel-detail-inner,
+html[data-theme='custom'] .hostel-detail-inner { background: var(--user-page); }
+html[data-theme='night'] .property-card,
+html[data-theme='custom'] .property-card,
+html[data-theme='night'] .results-review,
+html[data-theme='custom'] .results-review,
+html[data-theme='night'] .settings-theme-option,
+html[data-theme='custom'] .settings-theme-option { color: var(--user-text); background: var(--user-surface); }
+html[data-theme='night'] .hero-section,
+html[data-theme='custom'] .hero-section,
+html[data-theme='night'] .about-hero,
+html[data-theme='custom'] .about-hero { background-color: var(--user-page); }
+html[data-theme='night'] .dashboard-shell,
+html[data-theme='custom'] .dashboard-shell { background: var(--user-page); }
+html[data-theme='night'] .dashboard-sidebar,
+html[data-theme='custom'] .dashboard-sidebar,
+html[data-theme='night'] .dashboard-topbar,
+html[data-theme='custom'] .dashboard-topbar,
+html[data-theme='night'] .property-card,
+html[data-theme='custom'] .property-card,
+html[data-theme='night'] .settings-panel,
+html[data-theme='custom'] .settings-panel { border-color: rgba(210, 230, 220, 0.2); background: var(--user-surface); }
+html[data-theme='night'] .dashboard-content,
+html[data-theme='custom'] .dashboard-content,
+html[data-theme='night'] .settings-page,
+html[data-theme='custom'] .settings-page { background: var(--user-page); }
+
+html[data-theme='night'] .dashboard-main,
+html[data-theme='custom'] .dashboard-main { background: var(--dashboard-page); }
+html[data-theme='night'] .dashboard-search-input,
+html[data-theme='custom'] .dashboard-search-input,
+html[data-theme='night'] .owner-filter select,
+html[data-theme='custom'] .owner-filter select,
+html[data-theme='night'] .owner-property-table,
+html[data-theme='custom'] .owner-property-table,
+html[data-theme='night'] .owner-quick-stat,
+html[data-theme='custom'] .owner-quick-stat,
+html[data-theme='night'] .admin-stat-card,
+html[data-theme='custom'] .admin-stat-card,
+html[data-theme='night'] .admin-approval-panel,
+html[data-theme='custom'] .admin-approval-panel,
+html[data-theme='night'] .admin-health-panel,
+html[data-theme='custom'] .admin-health-panel,
+html[data-theme='night'] .admin-mini-card,
+html[data-theme='custom'] .admin-mini-card,
+html[data-theme='night'] .dashboard-activity-panel,
+html[data-theme='custom'] .dashboard-activity-panel { color: var(--dashboard-ink); border-color: var(--dashboard-line); background: var(--dashboard-surface); }
+html[data-theme='night'] .dashboard-search-copy strong,
+html[data-theme='custom'] .dashboard-search-copy strong,
+html[data-theme='night'] .dashboard-stat-card div span,
+html[data-theme='custom'] .dashboard-stat-card div span,
+html[data-theme='night'] .dashboard-stay-type,
+html[data-theme='custom'] .dashboard-stay-type,
+html[data-theme='night'] .dashboard-stay-body p,
+html[data-theme='custom'] .dashboard-stay-body p,
+html[data-theme='night'] .owner-property-name span,
+html[data-theme='custom'] .owner-property-name span,
+html[data-theme='night'] .owner-table-header,
+html[data-theme='custom'] .owner-table-header,
+html[data-theme='night'] .admin-tabs button,
+html[data-theme='custom'] .admin-tabs button,
+html[data-theme='night'] .health-line,
+html[data-theme='custom'] .health-line { color: #b7cbc3; }
+html[data-theme='night'] .dashboard-search-copy span,
+html[data-theme='custom'] .dashboard-search-copy span,
+html[data-theme='night'] .dashboard-search-input input,
+html[data-theme='custom'] .dashboard-search-input input,
+html[data-theme='night'] .dashboard-search-input input::placeholder,
+html[data-theme='custom'] .dashboard-search-input input::placeholder,
+html[data-theme='night'] .activity-row span,
+html[data-theme='custom'] .activity-row span,
+html[data-theme='night'] .owner-enquiry-row span,
+html[data-theme='custom'] .owner-enquiry-row span,
+html[data-theme='night'] .admin-mini-card > div > span,
+html[data-theme='custom'] .admin-mini-card > div > span { color: #9fb7ae; }
+html[data-theme='night'] .dashboard-stay-body h3,
+html[data-theme='custom'] .dashboard-stay-body h3,
+html[data-theme='night'] .owner-property-name strong,
+html[data-theme='custom'] .owner-property-name strong,
+html[data-theme='night'] .owner-property-row strong,
+html[data-theme='custom'] .owner-property-row strong,
+html[data-theme='night'] .admin-panel-heading h2,
+html[data-theme='custom'] .admin-panel-heading h2,
+html[data-theme='night'] .admin-mini-card h2,
+html[data-theme='custom'] .admin-mini-card h2 { color: var(--dashboard-ink); }
+html[data-theme='night'] .dashboard-search-input,
+html[data-theme='custom'] .dashboard-search-input { background: #234144; }
+html[data-theme='night'] .settings-header h1,
+html[data-theme='custom'] .settings-header h1,
+html[data-theme='night'] .hero-copy h1,
+html[data-theme='custom'] .hero-copy h1,
+html[data-theme='night'] .about-hero h1,
+html[data-theme='custom'] .about-hero h1 { color: var(--user-text); }
+html[data-theme='night'] h1,
+html[data-theme='night'] h2,
+html[data-theme='night'] h3,
+html[data-theme='custom'] h1,
+html[data-theme='custom'] h2,
+html[data-theme='custom'] h3 { color: var(--user-text); }
+html[data-theme='night'] p,
+html[data-theme='night'] span,
+html[data-theme='night'] label,
+html[data-theme='custom'] p,
+html[data-theme='custom'] span,
+html[data-theme='custom'] label { border-color: rgba(210, 230, 220, 0.18); }
+html[data-motion='reduced'] *, html[data-motion='reduced'] *::before, html[data-motion='reduced'] *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+html[data-density='compact'] .settings-panel { padding: 1.1rem; }
+
+html[data-theme] .ui-button-primary:hover,
+html[data-theme] .hero-button-primary:hover,
+html[data-theme] .cta-button-primary:hover,
+html[data-theme] .hostels-search-button:hover,
+html[data-theme] .dashboard-search-button:hover,
+html[data-theme] .hostel-enquire-button:hover,
+html[data-theme] .hostel-detail-aside button:hover { background: var(--user-hover-accent, #5f7f3c); }
+
+html[data-theme] a:hover,
+html[data-theme] .dashboard-section-heading > a:hover,
+html[data-theme] .dashboard-icon-button:hover,
+html[data-theme] .site-navbar-links a:hover,
+html[data-theme] .site-navbar-auth a:hover { color: var(--user-hover-accent, #5f7f3c); }
+
+html[data-theme] .dashboard-nav-link:hover,
+html[data-theme] .dashboard-nav-link.active,
+html[data-theme] .settings-theme-option:hover,
+html[data-theme] .hostels-filter-button:hover,
+html[data-theme] .hostels-use-location:hover,
+html[data-theme] .property-card:hover,
+html[data-theme] .results-review:hover { background-color: var(--user-hover-surface, #edf4d8); }
+
+html[data-theme] button:hover { border-color: var(--user-hover-accent, #5f7f3c); }
+
+@media (max-width: 760px) {
+  .settings-header { align-items: start; flex-direction: column; }
+  .settings-save-button { width: 100%; }
+  .settings-header-actions { width: 100%; justify-content: start; }
+  .settings-layout { grid-template-columns: 1fr; }
+  .settings-theme-panel { grid-column: auto; }
+  .settings-theme-options, .settings-color-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 430px) {
+  .settings-theme-options, .settings-color-grid { grid-template-columns: 1fr; }
+}
+
 .hostel-detail-aside {
   align-self: start;
   padding: 1.5rem;
@@ -4399,3 +4619,284 @@ select:focus-visible {
   .profile-role-grid { grid-template-columns: 1fr; }
   .profile-form-card { box-shadow: 6px 6px 0 #d3dfc4; }
 }
+
+/* Final night contrast pass */
+html[data-theme='night'] {
+  color-scheme: dark;
+  --night-page: #102528;
+  --night-surface: #1a3638;
+  --night-surface-raised: #214346;
+  --night-text: #eff7ef;
+  --night-muted: #b9ccc5;
+  --night-faint: #9fb8b0;
+  --night-border: #3a5a5b;
+  --night-accent: #c7e58e;
+}
+
+html[data-theme='night'] body,
+html[data-theme='night'] .hostels-page,
+html[data-theme='night'] .results-page,
+html[data-theme='night'] .hostel-detail-page,
+html[data-theme='night'] .about-page,
+html[data-theme='night'] .contact-page,
+html[data-theme='night'] .profile-page,
+html[data-theme='night'] .settings-page { color: var(--night-text); background: var(--night-page); }
+
+html[data-theme='night'] .site-navbar,
+html[data-theme='night'] .featured-section,
+html[data-theme='night'] .hostels-section,
+html[data-theme='night'] .results-content,
+html[data-theme='night'] .hostel-detail-inner,
+html[data-theme='night'] .about-intro,
+html[data-theme='night'] .about-roles,
+html[data-theme='night'] .contact-support,
+html[data-theme='night'] .profile-page-inner { border-color: var(--night-border); background: var(--night-page); }
+
+html[data-theme='night'] .hostels-hero,
+html[data-theme='night'] .results-hero,
+html[data-theme='night'] .about-hero,
+html[data-theme='night'] .contact-hero { background-color: var(--night-page); }
+
+html[data-theme='night'] h1,
+html[data-theme='night'] h2,
+html[data-theme='night'] h3,
+html[data-theme='night'] .hostels-hero h1,
+html[data-theme='night'] .results-hero h1,
+html[data-theme='night'] .about-hero h1,
+html[data-theme='night'] .contact-hero h1,
+html[data-theme='night'] .hostel-detail-summary h1,
+html[data-theme='night'] .simple-page h1,
+html[data-theme='night'] .profile-page-title h1,
+html[data-theme='night'] .settings-header h1 { color: var(--night-text); }
+
+html[data-theme='night'] p,
+html[data-theme='night'] small,
+html[data-theme='night'] label,
+html[data-theme='night'] .hostels-hero-copy > p:last-child,
+html[data-theme='night'] .results-hero > div:first-child > p:last-child,
+html[data-theme='night'] .hostel-detail-description,
+html[data-theme='night'] .about-hero-copy > p:last-of-type,
+html[data-theme='night'] .contact-hero-copy > p:last-of-type,
+html[data-theme='night'] .profile-page-title > div > p:last-child { color: var(--night-muted); }
+
+html[data-theme='night'] a,
+html[data-theme='night'] .featured-view-all,
+html[data-theme='night'] .property-card-link,
+html[data-theme='night'] .hostel-back-link,
+html[data-theme='night'] .profile-back-link,
+html[data-theme='night'] .profile-header-actions a,
+html[data-theme='night'] .profile-header-actions button { color: var(--night-accent); }
+
+html[data-theme='night'] .property-card,
+html[data-theme='night'] .results-filters,
+html[data-theme='night'] .results-review,
+html[data-theme='night'] .hostel-detail-aside,
+html[data-theme='night'] .contact-hero-card,
+html[data-theme='night'] .contact-form,
+html[data-theme='night'] .contact-ai-box,
+html[data-theme='night'] .profile-form-card,
+html[data-theme='night'] .profile-side-card,
+html[data-theme='night'] .settings-panel { border-color: var(--night-border); background: var(--night-surface); color: var(--night-text); }
+
+html[data-theme='night'] .property-card-location,
+html[data-theme='night'] .property-card-price,
+html[data-theme='night'] .results-distance,
+html[data-theme='night'] .results-list-heading > span,
+html[data-theme='night'] .hostel-detail-location,
+html[data-theme='night'] .hostel-detail-rating span,
+html[data-theme='night'] .profile-field span,
+html[data-theme='night'] .profile-picture-zoom,
+html[data-theme='night'] .profile-picture-editor p { color: var(--night-faint); }
+
+html[data-theme='night'] input,
+html[data-theme='night'] select,
+html[data-theme='night'] textarea,
+html[data-theme='night'] .results-filters select,
+html[data-theme='night'] .profile-field input,
+html[data-theme='night'] .contact-form input,
+html[data-theme='night'] .contact-form select,
+html[data-theme='night'] .contact-form textarea { border-color: var(--night-border); color: var(--night-text); background: var(--night-surface-raised); }
+
+html[data-theme='night'] input::placeholder,
+html[data-theme='night'] textarea::placeholder { color: var(--night-faint); }
+
+html[data-theme='night'] .dashboard-shell { color: var(--night-text); background: var(--night-page); }
+html[data-theme='night'] .dashboard-nav-link.active,
+html[data-theme='night'] .dashboard-nav-link:hover { color: #173b3d !important; background: var(--night-accent); }
+html[data-theme='night'] .dashboard-nav-link.active svg,
+html[data-theme='night'] .dashboard-nav-link:hover svg { color: #173b3d; }
+html[data-theme='night'] .dashboard-nav-link,
+html[data-theme='night'] .dashboard-profile span,
+html[data-theme='night'] .dashboard-nav-label,
+html[data-theme='night'] .dashboard-help small,
+html[data-theme='night'] .dashboard-logout,
+html[data-theme='night'] .dashboard-breadcrumb { color: var(--night-muted); }
+html[data-theme='night'] .dashboard-profile strong,
+html[data-theme='night'] .dashboard-brand,
+html[data-theme='night'] .dashboard-breadcrumb strong { color: var(--night-text); }
+html[data-theme='night'] .dashboard-main,
+html[data-theme='night'] .dashboard-content,
+html[data-theme='night'] .dashboard-topbar { background: var(--night-page); }
+html[data-theme='night'] .dashboard-search-panel,
+html[data-theme='night'] .dashboard-stat-card,
+html[data-theme='night'] .dashboard-stay-card,
+html[data-theme='night'] .dashboard-activity-panel,
+html[data-theme='night'] .owner-quick-stat,
+html[data-theme='night'] .owner-property-table,
+html[data-theme='night'] .admin-stat-card,
+html[data-theme='night'] .admin-approval-panel,
+html[data-theme='night'] .admin-health-panel,
+html[data-theme='night'] .admin-mini-card { border-color: var(--night-border); background: var(--night-surface); }
+html[data-theme='night'] .dashboard-search-copy strong,
+html[data-theme='night'] .dashboard-stat-card strong,
+html[data-theme='night'] .dashboard-stay-body h3,
+html[data-theme='night'] .owner-property-name strong,
+html[data-theme='night'] .owner-property-row strong,
+html[data-theme='night'] .admin-panel-heading h2,
+html[data-theme='night'] .admin-mini-card h2 { color: var(--night-text); }
+html[data-theme='night'] .dashboard-search-copy span,
+html[data-theme='night'] .dashboard-search-input input,
+html[data-theme='night'] .dashboard-search-input input::placeholder,
+html[data-theme='night'] .dashboard-stat-card div span,
+html[data-theme='night'] .dashboard-stay-type,
+html[data-theme='night'] .dashboard-stay-body p,
+html[data-theme='night'] .owner-property-name span,
+html[data-theme='night'] .owner-table-header,
+html[data-theme='night'] .owner-enquiry-row span,
+html[data-theme='night'] .admin-tabs button,
+html[data-theme='night'] .health-line,
+html[data-theme='night'] .admin-mini-card > div > span { color: var(--night-muted); }
+html[data-theme='night'] .dashboard-search-input { border-color: var(--night-border); background: var(--night-surface-raised); }
+html[data-theme='night'] .dashboard-search-input input { color: var(--night-text); }
+html[data-theme='night'] .owner-filter select { border-color: var(--night-border); color: var(--night-text); background: var(--night-surface-raised); }
+html[data-theme='night'] .owner-property-row,
+html[data-theme='night'] .approval-row,
+html[data-theme='night'] .activity-row,
+html[data-theme='night'] .owner-enquiry-row,
+html[data-theme='night'] .health-line { border-color: var(--night-border); }
+html[data-theme='night'] .owner-quick-stat,
+html[data-theme='night'] .owner-property-table,
+html[data-theme='night'] .admin-stat-card,
+html[data-theme='night'] .admin-approval-panel,
+html[data-theme='night'] .admin-health-panel,
+html[data-theme='night'] .admin-mini-card,
+html[data-theme='night'] .dashboard-activity-panel { background: var(--night-surface); }
+html[data-theme='night'] .owner-quick-stat strong,
+html[data-theme='night'] .owner-property-name strong,
+html[data-theme='night'] .owner-property-name span,
+html[data-theme='night'] .owner-room-count,
+html[data-theme='night'] .occupancy-cell strong,
+html[data-theme='night'] .owner-enquiry-row strong,
+html[data-theme='night'] .admin-stat-card strong,
+html[data-theme='night'] .admin-panel-heading h2,
+html[data-theme='night'] .admin-mini-card h2,
+html[data-theme='night'] .health-score > div:last-child strong,
+html[data-theme='night'] .health-ring strong { color: var(--night-text); }
+html[data-theme='night'] .owner-quick-stat div span,
+html[data-theme='night'] .owner-enquiry-row span,
+html[data-theme='night'] .owner-table-header,
+html[data-theme='night'] .approval-row span,
+html[data-theme='night'] .approval-row time,
+html[data-theme='night'] .admin-stat-card p,
+html[data-theme='night'] .admin-tabs button,
+html[data-theme='night'] .admin-empty-tab,
+html[data-theme='night'] .health-score > div:last-child span,
+html[data-theme='night'] .health-ring span,
+html[data-theme='night'] .health-line { color: var(--night-muted); }
+html[data-theme='night'] .owner-add-property,
+html[data-theme='night'] .owner-enquiry-row button,
+html[data-theme='night'] .admin-tabs button,
+html[data-theme='night'] .owner-property-row > a { border-color: var(--night-border); color: var(--night-muted); background: var(--night-surface-raised); }
+html[data-theme='night'] .owner-add-property:hover,
+html[data-theme='night'] .owner-enquiry-row button:hover,
+html[data-theme='night'] .admin-tabs button.active { color: var(--night-text); background: #2b5052; }
+html[data-theme='night'] .stat-icon.green,
+html[data-theme='night'] .stat-icon.yellow,
+html[data-theme='night'] .stat-icon.blue,
+html[data-theme='night'] .admin-live-status,
+html[data-theme='night'] .approval-check,
+html[data-theme='night'] .approval-dismiss { color: var(--night-text); background: var(--night-surface-raised); }
+
+/* Legacy page sections need explicit night surfaces because they define their own light fills. */
+html[data-theme='night'] .search-section,
+html[data-theme='night'] .featured-section,
+html[data-theme='night'] .colleges-section,
+html[data-theme='night'] .why-section,
+html[data-theme='night'] .testimonials-section,
+html[data-theme='night'] .cta-section,
+html[data-theme='night'] .hostels-search-panel,
+html[data-theme='night'] .hostels-areas,
+html[data-theme='night'] .hostels-trust,
+html[data-theme='night'] .results-reviews,
+html[data-theme='night'] .about-process,
+html[data-theme='night'] .about-trust,
+html[data-theme='night'] .about-cta,
+html[data-theme='night'] .contact-options,
+html[data-theme='night'] .contact-ai,
+html[data-theme='night'] .contact-faq-strip,
+html[data-theme='night'] .profile-page-header,
+html[data-theme='night'] .profile-form-card,
+html[data-theme='night'] .profile-side-card { color: var(--night-text) !important; border-color: var(--night-border) !important; background: var(--night-page) !important; }
+
+html[data-theme='night'] .search-section h2,
+html[data-theme='night'] .featured-heading h2,
+html[data-theme='night'] .colleges-heading h2,
+html[data-theme='night'] .why-heading h2,
+html[data-theme='night'] .testimonials-heading h2,
+html[data-theme='night'] .cta-section h2,
+html[data-theme='night'] .hostels-section h2,
+html[data-theme='night'] .hostels-areas h2,
+html[data-theme='night'] .hostels-trust h2,
+html[data-theme='night'] .results-reviews h2,
+html[data-theme='night'] .about-process h2,
+html[data-theme='night'] .about-trust h2,
+html[data-theme='night'] .about-cta h2,
+html[data-theme='night'] .contact-options h2,
+html[data-theme='night'] .contact-ai h2,
+html[data-theme='night'] .contact-faq-strip h2,
+html[data-theme='night'] .profile-form-card h2,
+html[data-theme='night'] .profile-side-card h2 { color: var(--night-text) !important; }
+
+html[data-theme='night'] .search-section p,
+html[data-theme='night'] .featured-section p,
+html[data-theme='night'] .colleges-section p,
+html[data-theme='night'] .why-section p,
+html[data-theme='night'] .testimonials-section p,
+html[data-theme='night'] .cta-section p,
+html[data-theme='night'] .hostels-section p,
+html[data-theme='night'] .hostels-areas small,
+html[data-theme='night'] .hostels-trust span,
+html[data-theme='night'] .results-reviews p,
+html[data-theme='night'] .about-process p,
+html[data-theme='night'] .about-trust p,
+html[data-theme='night'] .about-cta p,
+html[data-theme='night'] .contact-options p,
+html[data-theme='night'] .contact-ai p,
+html[data-theme='night'] .contact-faq-strip p,
+html[data-theme='night'] .profile-side-card p { color: var(--night-muted) !important; }
+
+html[data-theme='night'] .search-field,
+html[data-theme='night'] .hostels-search-field,
+html[data-theme='night'] .search-field input,
+html[data-theme='night'] .hostels-search-field input,
+html[data-theme='night'] .search-field select,
+html[data-theme='night'] .hostels-search-field select,
+html[data-theme='night'] .contact-channel-card,
+html[data-theme='night'] .contact-details,
+html[data-theme='night'] .about-role-panel,
+html[data-theme='night'] .about-process-grid article { border-color: var(--night-border) !important; color: var(--night-text) !important; background: var(--night-surface) !important; }
+
+html[data-theme='night'] .search-field span,
+html[data-theme='night'] .hostels-search-field span,
+html[data-theme='night'] .contact-channel-card p,
+html[data-theme='night'] .contact-details small,
+html[data-theme='night'] .about-role-panel p,
+html[data-theme='night'] .about-process-grid article p { color: var(--night-muted) !important; }
+
+html[data-theme='night'] .site-footer,
+html[data-theme='night'] .footer-content,
+html[data-theme='night'] .footer-column,
+html[data-theme='night'] .footer-bottom { border-color: var(--night-border) !important; background: #0c1d20 !important; color: var(--night-text) !important; }
+html[data-theme='night'] .site-footer a,
+html[data-theme='night'] .site-footer p,
+html[data-theme='night'] .site-footer span { color: var(--night-muted) !important; }

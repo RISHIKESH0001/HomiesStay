@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
 	FiBell,
 	FiCompass,
@@ -28,6 +28,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const signedInUser = useSelector((state) => state.auth.user);
 	const currentProfile = signedInUser
 		? { ...profile, ...signedInUser, type: profile?.type || `${signedInUser.role || role} account` }
@@ -36,6 +37,8 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 		dispatch(logout());
 		navigate('/');
 	};
+	const dashboardPath = role === 'owner' ? '/owner/dashboard' : role === 'admin' ? '/admin/dashboard' : '/dashboard';
+	const getWorkspaceHref = (label) => label === 'Overview' ? dashboardPath : dashboardPath;
 
 	return (
 		<div className="dashboard-shell">
@@ -59,7 +62,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 				<nav className="dashboard-nav" aria-label="Dashboard navigation">
 					<p className="dashboard-nav-label">Workspace</p>
 					{navigation.map(({ label, icon: Icon, count }, index) => (
-						<a className={index === 0 ? 'dashboard-nav-link active' : 'dashboard-nav-link'} href={`#${label.toLowerCase().replaceAll(' ', '-')}`} key={label} onClick={() => setIsSidebarOpen(false)}>
+						<a className={location.pathname === dashboardPath && ((index === 0 && !location.hash) || location.hash === `#${label.toLowerCase().replaceAll(' ', '-')}`) ? 'dashboard-nav-link active' : 'dashboard-nav-link'} href={getWorkspaceHref(label)} key={label} onClick={() => setIsSidebarOpen(false)}>
 							<Icon />
 							<span>{label}</span>
 							{count && <em>{count}</em>}
@@ -67,7 +70,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 					))}
 					<p className="dashboard-nav-label secondary">Account</p>
 					<a className="dashboard-nav-link" href="/profile" onClick={() => setIsSidebarOpen(false)}><FiUser /><span>{role === 'admin' ? 'Admin profile' : role === 'owner' ? 'Business profile' : 'My profile'}</span></a>
-					<a className="dashboard-nav-link" href="#settings" onClick={() => setIsSidebarOpen(false)}><FiSettings /><span>Settings</span></a>
+					<a className="dashboard-nav-link" href="/settings" onClick={() => setIsSidebarOpen(false)}><FiSettings /><span>Settings</span></a>
 				</nav>
 
 				<div className="dashboard-sidebar-footer">
