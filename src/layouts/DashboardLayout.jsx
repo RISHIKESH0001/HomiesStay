@@ -38,7 +38,12 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 		navigate('/');
 	};
 	const dashboardPath = role === 'owner' ? '/owner/dashboard' : role === 'admin' ? '/admin/dashboard' : '/dashboard';
-	const getWorkspaceHref = (label) => label === 'Overview' ? dashboardPath : dashboardPath;
+	const getWorkspaceHref = (label) => {
+		if (role === 'owner' && label === 'My properties') return '/owner/properties';
+		if (role === 'owner' && label === 'Enquiries') return '/owner/enquiries';
+		if (role === 'owner' && label === 'Applications') return '/owner/applications';
+		return dashboardPath;
+	};
 
 	return (
 		<div className="dashboard-shell">
@@ -62,7 +67,7 @@ const DashboardLayout = ({ children, role = 'student', profile, navigation = stu
 				<nav className="dashboard-nav" aria-label="Dashboard navigation">
 					<p className="dashboard-nav-label">Workspace</p>
 					{navigation.map(({ label, icon: Icon, count }, index) => (
-						<a className={location.pathname === dashboardPath && ((index === 0 && !location.hash) || location.hash === `#${label.toLowerCase().replaceAll(' ', '-')}`) ? 'dashboard-nav-link active' : 'dashboard-nav-link'} href={getWorkspaceHref(label)} key={label} onClick={() => setIsSidebarOpen(false)}>
+						<a className={(location.pathname === getWorkspaceHref(label) && (role === 'owner' ? label === 'Overview' ? !location.hash : true : (index === 0 && !location.hash) || location.hash === `#${label.toLowerCase().replaceAll(' ', '-')}`)) ? 'dashboard-nav-link active' : 'dashboard-nav-link'} href={getWorkspaceHref(label)} key={label} onClick={() => setIsSidebarOpen(false)}>
 							<Icon />
 							<span>{label}</span>
 							{count && <em>{count}</em>}

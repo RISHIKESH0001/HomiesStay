@@ -5,6 +5,7 @@ import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import { roomBaruipur1, roomBaruipur2, roomBaruipur3, roomBaruipur4, roomBaruipur5, roomBengaluru1, roomHyderabad1, roomKolkata1, roomKolkata2, roomPune1, roomPune2, roomWorkspace } from '../../assets/hostelImages';
+import { readStoredProperties, toPublicHostel } from '../../services/propertyStorage';
 
 const hostels = [
 	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 8,500', rating: '4.8', image: roomBengaluru1, tag: 'Best match' },
@@ -45,6 +46,7 @@ const getDistanceBetweenLocations = (latitude, longitude, location) => {
 
 const Hostels = () => {
 	const navigate = useNavigate();
+	const [ownerListings] = useState(() => readStoredProperties().filter((property) => property.status === 'Live').map(toPublicHostel));
 	const [search, setSearch] = useState('');
 	const [location, setLocation] = useState('Kolkata');
 	const [budget, setBudget] = useState('');
@@ -53,13 +55,13 @@ const Hostels = () => {
 
 	const filteredHostels = useMemo(() => {
 		const query = search.trim().toLowerCase();
-		return hostels.filter((hostel) => {
+		return [...hostels, ...ownerListings].filter((hostel) => {
 			const matchesSearch = !query || [hostel.name, hostel.location, hostel.college].some((value) => value.toLowerCase().includes(query));
 			const price = Number(hostel.price.replace(/[^0-9]/g, ''));
 			const matchesBudget = !budget || (budget === 'under-8000' ? price < 8000 : price >= 8000 && price <= 10000);
 			return matchesSearch && matchesBudget;
 		});
-	}, [budget, search]);
+	}, [budget, ownerListings, search]);
 
 	const handleSearch = (event) => {
 		event.preventDefault();
@@ -113,7 +115,7 @@ const Hostels = () => {
 					<div className="hostels-search-meta"><span><FiClock aria-hidden="true" /> Recently searched</span>{recentSearches.map((item) => <button key={item} type="button" onClick={() => setSearch(item.split(',')[0])}>{item}</button>)}<button className="hostels-use-location" type="button" onClick={useCurrentLocation}><FiNavigation aria-hidden="true" /> Use current location</button></div>
 				</section>
 
-				<section className="hostels-section hostels-recommendations" aria-labelledby="recommendations-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Curated around you</p><h2 id="recommendations-title">Recommended near {location}</h2><p>Stays with the right balance of distance, comfort, and monthly rent.</p></div><button className="hostels-filter-button" type="button"><FiSliders aria-hidden="true" /> Filters</button></div><div className="property-grid">{hostels.slice(0, 3).map((hostel) => <div className="hostel-recommendation" key={hostel.name}><span>{hostel.tag}</span><PropertyCard hostel={hostel} /></div>)}</div></section>
+				<section className="hostels-section hostels-recommendations" aria-labelledby="recommendations-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Curated around you</p><h2 id="recommendations-title">Recommended near {location}</h2><p>Stays with the right balance of distance, comfort, and monthly rent.</p></div><button className="hostels-filter-button" type="button"><FiSliders aria-hidden="true" /> Filters</button></div><div className="property-grid">{[...hostels, ...ownerListings].slice(0, 3).map((hostel) => <div className="hostel-recommendation" key={hostel.name}><span>{hostel.tag}</span><PropertyCard hostel={hostel} /></div>)}</div></section>
 
 				<section className="hostels-section hostels-browse" aria-labelledby="browse-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Make it yours</p><h2 id="browse-title">Browse all stays</h2><p>{filteredHostels.length} verified homes ready for your move.</p></div></div><div className="property-grid">{filteredHostels.map((hostel) => <PropertyCard key={hostel.name} hostel={hostel} />)}</div>{filteredHostels.length === 0 && <div className="hostels-empty"><h3>No exact matches yet.</h3><p>Try a nearby city, college, or a wider budget.</p><button type="button" onClick={() => { setSearch(''); setBudget(''); }}>Clear search</button></div>}</section>
 

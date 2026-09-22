@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { FiArrowLeft, FiArrowUpRight, FiCheck, FiHeart, FiMapPin, FiMessageCircle, FiShield, FiStar, FiUsers } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowUpRight, FiBarChart2, FiCheck, FiClipboard, FiClock, FiHeart, FiHome, FiMapPin, FiMessageCircle, FiShield, FiStar, FiUsers } from 'react-icons/fi';
 import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import { roomBaruipur1, roomBaruipur2, roomBaruipur3, roomBaruipur4, roomBaruipur5, roomBengaluru1, roomHyderabad1, roomKolkata1, roomKolkata2, roomModern2, roomModern3, roomPune1, roomPune2, roomWorkspace } from '../../assets/hostelImages';
+import { getStoredProperty, toPublicHostel } from '../../services/propertyStorage';
 
 const hostelDetails = {
 	'the-nest-residency': { name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', price: 'Rs. 8,500', rating: '4.8', reviews: '126', image: roomBengaluru1, type: 'Private rooms and co-living', commute: '12 min to Christ University', description: 'A bright, well-connected stay for students who want the energy of Koramangala close by and a comfortable place to come back to.', amenities: ['Wi-Fi', 'Housekeeping', 'Power backup', 'Study lounge', 'Meals available', '24/7 security'] },
@@ -87,21 +90,79 @@ const hostelReviews = {
 	],
 };
 
+const ownerNavigation = [
+	{ label: 'Overview', icon: FiBarChart2 },
+	{ label: 'My properties', icon: FiHome, count: '3' },
+	{ label: 'Enquiries', icon: FiMessageCircle, count: '8' },
+	{ label: 'Applications', icon: FiClipboard, count: '5' },
+];
+
+const ownerPropertySlugs = new Set(['the-olive-house', 'casa-nook', 'mango-tree-living']);
+const ownerMetricsBySlug = {
+	'the-olive-house': { totalRooms: 50, occupiedRooms: 46, paidStudents: 41, pendingStudents: 5 },
+	'casa-nook': { totalRooms: 25, occupiedRooms: 21, paidStudents: 19, pendingStudents: 2 },
+	'mango-tree-living': { totalRooms: 25, occupiedRooms: 17, paidStudents: 15, pendingStudents: 2 },
+};
+
+const getOwnerMetrics = (property) => {
+	if (ownerMetricsBySlug[property?.slug]) return { ...ownerMetricsBySlug[property.slug], vacantRooms: ownerMetricsBySlug[property.slug].totalRooms - ownerMetricsBySlug[property.slug].occupiedRooms, applications: 6, admissions: 3, leavingSoon: 4 };
+	const roomParts = property?.rooms?.split('/').map((value) => Number(value.trim())) || [];
+	const totalRooms = roomParts[1] || property?.capacity || 25;
+	const occupiedRooms = roomParts[0] || Math.round(totalRooms * ((property?.occupancy || 78) / 100));
+	const vacantRooms = Math.max(totalRooms - occupiedRooms, 0);
+	return {
+		totalRooms,
+		occupiedRooms,
+		vacantRooms,
+		paidStudents: Math.max(occupiedRooms - 3, 0),
+		pendingStudents: Math.min(3, occupiedRooms),
+		applications: 6,
+		admissions: 3,
+		leavingSoon: 4,
+	};
+};
+
+const OwnerHostelDetails = ({ hostel }) => {
+	const metrics = getOwnerMetrics(hostel);
+	const [activeTab, setActiveTab] = useState('overview');
+	return (
+		<DashboardLayout role="owner" profile={{ initials: 'RS', name: 'Riya Shah', type: 'Property owner' }} navigation={ownerNavigation} pageTitle={hostel.name}>
+			<main className="dashboard-content owner-hostel-overview">
+				<Link className="owner-hostel-back" to="/owner/properties"><FiArrowLeft /> Back to my properties</Link>
+				<section className="owner-hostel-heading"><div><p className="dashboard-eyebrow">Property operations</p><h1>{hostel.name}</h1><p><FiMapPin /> {hostel.location} <span>·</span> {hostel.college}</p></div><div className="owner-hostel-heading-actions"><span className="owner-hostel-live"><i /> Live listing</span><button type="button"><FiArrowUpRight /> Edit property</button></div></section>
+				<section className="owner-hostel-stat-grid"><article><span className="owner-hostel-stat-icon occupied"><FiUsers /></span><div><strong>{metrics.occupiedRooms}</strong><span>Occupied rooms</span></div><small>of {metrics.totalRooms} total</small></article><article><span className="owner-hostel-stat-icon vacant"><FiHome /></span><div><strong>{metrics.vacantRooms}</strong><span>Vacant rooms</span></div><small>ready to fill</small></article><article><span className="owner-hostel-stat-icon paid"><FiCheck /></span><div><strong>{metrics.paidStudents}</strong><span>Rent paid</span></div><small>{metrics.pendingStudents} pending</small></article><article><span className="owner-hostel-stat-icon pending"><FiClock /></span><div><strong>{metrics.pendingStudents}</strong><span>Rent pending</span></div><small>needs follow-up</small></article></section>
+				<div className="owner-hostel-tabs" role="tablist"><button className={activeTab === 'overview' ? 'active' : ''} type="button" onClick={() => setActiveTab('overview')}>Overview</button><button className={activeTab === 'students' ? 'active' : ''} type="button" onClick={() => setActiveTab('students')}>Students & rent</button><button className={activeTab === 'activity' ? 'active' : ''} type="button" onClick={() => setActiveTab('activity')}>Activity</button></div>
+				{activeTab === 'overview' && <div className="owner-hostel-main-grid"><section className="owner-hostel-panel"><div className="owner-hostel-panel-heading"><div><p className="dashboard-eyebrow">Today at a glance</p><h2>Keep the house moving.</h2></div><span className="owner-hostel-updated">Updated just now</span></div><div className="owner-hostel-occupancy"><div className="owner-hostel-ring" style={{ '--occupancy': `${Math.round((metrics.occupiedRooms / metrics.totalRooms) * 100)}%` }}><strong>{Math.round((metrics.occupiedRooms / metrics.totalRooms) * 100)}%</strong><span>occupied</span></div><div><strong>{metrics.occupiedRooms} of {metrics.totalRooms} rooms are occupied</strong><p>{metrics.vacantRooms} rooms are currently available for your next admission.</p><div className="owner-hostel-progress"><i style={{ width: `${(metrics.occupiedRooms / metrics.totalRooms) * 100}%` }} /></div></div></div><div className="owner-hostel-payment-line"><span><FiCheck /> Rent collected this cycle</span><strong>{metrics.paidStudents} students paid</strong><em>{metrics.pendingStudents} pending</em></div></section><section className="owner-hostel-panel owner-hostel-quick-panel"><div className="owner-hostel-panel-heading"><div><p className="dashboard-eyebrow">Needs your attention</p><h2>Next actions</h2></div></div><div className="owner-hostel-action-row"><span className="owner-hostel-action-icon application"><FiClipboard /></span><div><strong>{metrics.applications} new applications</strong><small>Review profiles and move-in dates</small></div><button type="button">Review <FiArrowUpRight /></button></div><div className="owner-hostel-action-row"><span className="owner-hostel-action-icon admission"><FiUsers /></span><div><strong>{metrics.admissions} new admissions</strong><small>Ready for room assignment</small></div><button type="button">Open list <FiArrowUpRight /></button></div><div className="owner-hostel-action-row"><span className="owner-hostel-action-icon leaving"><FiClock /></span><div><strong>{metrics.leavingSoon} students leaving soon</strong><small>Course completion in the next 90 days</small></div><button type="button">Plan exits <FiArrowUpRight /></button></div></section></div>}
+				{activeTab === 'students' && <section className="owner-hostel-panel owner-hostel-students-panel"><div className="owner-hostel-panel-heading"><div><p className="dashboard-eyebrow">Resident ledger</p><h2>Students & rent status</h2></div><button type="button" className="owner-hostel-export">Export list <FiArrowUpRight /></button></div><div className="owner-hostel-ledger"><div><strong>Room 204 · Aarav Mehta</strong><span>Christ University · Private room</span><em className="paid">Paid · 18 Sep</em></div><div><strong>Room 108 · Nisha Kapoor</strong><span>Christ University · Shared room</span><em className="pending">Pending · due today</em></div><div><strong>Room 312 · Kabir Rao</strong><span>Christ University · Private room</span><em className="paid">Paid · 17 Sep</em></div></div></section>}
+				{activeTab === 'activity' && <section className="owner-hostel-panel"><div className="owner-hostel-panel-heading"><div><p className="dashboard-eyebrow">Recent activity</p><h2>What changed recently.</h2></div></div><div className="owner-hostel-activity"><p><span className="activity-mark green"><FiCheck /></span><span><strong>Rent payment received from Aarav Mehta</strong><small>Today · Room 204</small></span></p><p><span className="activity-mark yellow"><FiClipboard /></span><span><strong>New application received for a private room</strong><small>Yesterday · Move-in 1 October</small></span></p><p><span className="activity-mark blue"><FiClock /></span><span><strong>Course end reminder for 4 residents</strong><small>Yesterday · Follow up before renewal window</small></span></p></div></section>}
+				<section className="owner-hostel-exit-panel"><div><p className="dashboard-eyebrow">Plan ahead</p><h2>Students nearing the end of their course.</h2><p>Start exit conversations early, confirm move-out dates, and keep vacant rooms ready for the next batch.</p></div><button type="button">View {metrics.leavingSoon} students <FiArrowUpRight /></button></section>
+			</main>
+		</DashboardLayout>
+	);
+};
+
 const HostelDetails = () => {
 	const { hostelId } = useParams();
-	const hostel = hostelDetails[hostelId] || hostelDetails['the-nest-residency'];
+	const signedInUser = useSelector((state) => state.auth.user);
+	const storedProperty = getStoredProperty(hostelId);
+	const hostel = storedProperty ? { ...toPublicHostel(storedProperty), slug: hostelId, commute: storedProperty.commute, owner: storedProperty.owner } : { ...(hostelDetails[hostelId] || hostelDetails['the-nest-residency']), slug: hostelId };
+	const signedInOwnerId = signedInUser?.id || signedInUser?.email || signedInUser?.username;
+	const isDemoOwner = signedInOwnerId === 'owner-1' || signedInUser?.username?.toLowerCase() === 'riya' || signedInUser?.name?.toLowerCase() === 'riya shah';
+	const ownsProperty = signedInUser?.role === 'owner' && (storedProperty ? storedProperty.ownerId === signedInOwnerId : isDemoOwner && ownerPropertySlugs.has(hostelId));
 	const reviews = hostelReviews[hostelId] || hostelReviews['the-nest-residency'];
 	const [isSaved, setIsSaved] = useState(false);
 	const [enquirySent, setEnquirySent] = useState(false);
+
+	if (ownsProperty) return <OwnerHostelDetails hostel={hostel} />;
 
 	return (
 		<>
 			<NavBar />
 			<main className="hostel-detail-page">
 				<div className="hostel-detail-inner"><Link className="hostel-back-link" to="/hostels"><FiArrowLeft aria-hidden="true" /> Back to all hostels</Link>
-					<section className="hostel-detail-hero"><div className="hostel-detail-image"><img src={hostel.image} alt={`${hostel.name} accommodation`} /><span><FiShield aria-hidden="true" /> Verified property</span></div><div className="hostel-detail-summary"><p className="hostel-detail-kicker">{hostel.type}</p><h1>{hostel.name}</h1><p className="hostel-detail-location"><FiMapPin aria-hidden="true" /> {hostel.location}</p><div className="hostel-detail-rating"><strong><FiStar aria-hidden="true" /> {hostel.rating}</strong><span>{hostel.reviews} student reviews</span></div><p className="hostel-detail-description">{hostel.description}</p><div className="hostel-detail-price"><strong>{hostel.price}</strong><span>/ month</span></div><div className="hostel-detail-actions"><button className="hostel-enquire-button" type="button" onClick={() => setEnquirySent(true)}><FiMessageCircle aria-hidden="true" /> {enquirySent ? 'Enquiry sent' : 'Contact owner'}</button><button className={isSaved ? 'hostel-save-button saved' : 'hostel-save-button'} type="button" onClick={() => setIsSaved((current) => !current)} aria-label={isSaved ? 'Remove saved hostel' : 'Save hostel'}><FiHeart aria-hidden="true" /></button></div>{enquirySent && <p className="hostel-enquiry-note" role="status"><FiCheck aria-hidden="true" /> The owner will be notified. You can track replies from your dashboard.</p>}</div></section>
+					<section className="hostel-detail-hero"><div className="hostel-detail-image"><img src={hostel.image} alt={`${hostel.name} accommodation`} /><span><FiShield aria-hidden="true" /> Verified property</span>{hostel.photos?.length > 1 && <div className="hostel-detail-gallery">{hostel.photos.slice(0, 5).map((photo) => <img src={photo} alt="" key={photo} />)}</div>}</div><div className="hostel-detail-summary"><p className="hostel-detail-kicker">{hostel.type}</p><h1>{hostel.name}</h1><p className="hostel-detail-location"><FiMapPin aria-hidden="true" /> {hostel.location}</p><div className="hostel-detail-rating"><strong><FiStar aria-hidden="true" /> {hostel.rating}</strong><span>{hostel.reviews} student reviews</span></div><p className="hostel-detail-description">{hostel.description}</p><div className="hostel-detail-price"><strong>{hostel.price}</strong><span>/ month</span></div><div className="hostel-detail-actions"><button className="hostel-enquire-button" type="button" onClick={() => setEnquirySent(true)}><FiMessageCircle aria-hidden="true" /> {enquirySent ? 'Enquiry sent' : 'Contact owner'}</button><button className={isSaved ? 'hostel-save-button saved' : 'hostel-save-button'} type="button" onClick={() => setIsSaved((current) => !current)} aria-label={isSaved ? 'Remove saved hostel' : 'Save hostel'}><FiHeart aria-hidden="true" /></button></div>{enquirySent && <p className="hostel-enquiry-note" role="status"><FiCheck aria-hidden="true" /> The owner will be notified. You can track replies from your dashboard.</p>}</div></section>
 
-					<section className="hostel-detail-content"><div className="hostel-detail-main"><div className="hostel-detail-section"><p className="hostel-detail-kicker">A good fit if you want</p><h2>Less guesswork, more room to settle in.</h2><div className="hostel-detail-highlights"><span><FiMapPin aria-hidden="true" /><strong>Well connected</strong>{hostel.commute}</span><span><FiUsers aria-hidden="true" /><strong>Made for students</strong>Friendly shared spaces</span><span><FiShield aria-hidden="true" /><strong>Verified details</strong>Reviewed by Homies Stay</span></div></div><div className="hostel-detail-section"><p className="hostel-detail-kicker">What is included</p><h2>Everything you need to begin.</h2><div className="hostel-amenities">{hostel.amenities.map((amenity) => <span key={amenity}><FiCheck aria-hidden="true" /> {amenity}</span>)}</div></div><div className="hostel-detail-section hostel-review-section"><p className="hostel-detail-kicker">Student reviews</p><h2>What it is really like to stay here.</h2><div className="hostel-review-list">{reviews.map((review) => <article className="hostel-review" key={review.name}><div className="hostel-review-topline"><span><FiStar aria-hidden="true" /> {review.rating}</span><strong>{review.name}</strong></div><p>“{review.quote}”</p><small>{review.course}</small></article>)}</div></div></div><aside className="hostel-detail-aside"><p className="hostel-detail-kicker">Have a question?</p><h3>Ask before you decide.</h3><p>Send the owner an enquiry about availability, room types, move-in dates, or anything else on your mind.</p><button type="button" onClick={() => setEnquirySent(true)}>Ask the owner <FiArrowUpRight aria-hidden="true" /></button><small>Typical response within 24 hours</small></aside></section>
+					<section className="hostel-detail-content"><div className="hostel-detail-main"><div className="hostel-detail-section"><p className="hostel-detail-kicker">A good fit if you want</p><h2>Less guesswork, more room to settle in.</h2><div className="hostel-detail-highlights"><span><FiMapPin aria-hidden="true" /><strong>Well connected</strong>{hostel.commute}</span><span><FiUsers aria-hidden="true" /><strong>Near your college</strong>{hostel.college}</span><span><FiShield aria-hidden="true" /><strong>Student preference</strong>{hostel.gender || 'Unisex'} stay</span></div></div><div className="hostel-detail-section"><p className="hostel-detail-kicker">What is included</p><h2>Everything you need to begin.</h2><div className="hostel-amenities">{hostel.amenities.map((amenity) => <span key={amenity}><FiCheck aria-hidden="true" /> {amenity}</span>)}</div></div><div className="hostel-detail-section hostel-review-section"><p className="hostel-detail-kicker">Student reviews</p><h2>What it is really like to stay here.</h2><div className="hostel-review-list">{reviews.map((review) => <article className="hostel-review" key={review.name}><div className="hostel-review-topline"><span><FiStar aria-hidden="true" /> {review.rating}</span><strong>{review.name}</strong></div><p>“{review.quote}”</p><small>{review.course}</small></article>)}</div></div></div><aside className="hostel-detail-aside"><p className="hostel-detail-kicker">Have a question?</p><h3>Ask before you decide.</h3><p>Send the owner an enquiry about availability, room types, move-in dates, or anything else on your mind.</p>{hostel.owner && <div className="hostel-owner-contact"><strong>{hostel.owner.name}</strong><a href={`tel:${hostel.owner.phone}`}>{hostel.owner.phone}</a><a href={`mailto:${hostel.owner.email}`}>{hostel.owner.email}</a></div>}<button type="button" onClick={() => setEnquirySent(true)}>Ask the owner <FiArrowUpRight aria-hidden="true" /></button><small>Typical response within 24 hours</small></aside></section>
 				</div>
 			</main>
 			<Footer />

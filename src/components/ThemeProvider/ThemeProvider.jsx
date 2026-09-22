@@ -13,20 +13,20 @@ const ThemeSession = ({ children, user, userKey }) => {
 	useEffect(() => {
 		const applySettings = (nextSettings) => {
 			const activeTheme = nextSettings.theme === 'auto' ? getAutomaticTheme() : nextSettings.theme;
+			const isNight = activeTheme === 'night';
 			document.documentElement.dataset.theme = activeTheme;
 			document.documentElement.dataset.density = nextSettings.density;
 			document.documentElement.dataset.motion = nextSettings.animations ? 'full' : 'reduced';
-			document.documentElement.style.setProperty('--user-accent', nextSettings.accent);
-			document.documentElement.style.setProperty('--user-page', nextSettings.theme === 'custom' ? nextSettings.page : activeTheme === 'night' ? '#142b2e' : '#fbfaf5');
-			document.documentElement.style.setProperty('--user-surface', nextSettings.theme === 'custom' ? nextSettings.surface : activeTheme === 'night' ? '#1d3b3d' : '#ffffff');
-			document.documentElement.style.setProperty('--user-text', nextSettings.theme === 'custom' ? nextSettings.text : activeTheme === 'night' ? '#e8f0e6' : '#214f55');
+			document.documentElement.style.setProperty('--user-accent', nextSettings.theme === 'custom' ? nextSettings.accent : isNight ? '#b8d77b' : nextSettings.accent);
+			document.documentElement.style.setProperty('--user-page', nextSettings.theme === 'custom' ? nextSettings.page : isNight ? '#0e1c1f' : '#fbfaf5');
+			document.documentElement.style.setProperty('--user-surface', nextSettings.theme === 'custom' ? nextSettings.surface : isNight ? '#172b30' : '#ffffff');
+			document.documentElement.style.setProperty('--user-text', nextSettings.theme === 'custom' ? nextSettings.text : isNight ? '#edf6f0' : '#214f55');
 			document.documentElement.style.setProperty('--user-font', nextSettings.font);
 			document.documentElement.style.setProperty('--user-heading-font', nextSettings.headingFont);
-			document.documentElement.style.setProperty('--user-hover-accent', nextSettings.hoverAccent);
-			document.documentElement.style.setProperty('--user-hover-surface', nextSettings.hoverSurface);
-			const isNight = activeTheme === 'night';
-			const dashboardPage = nextSettings.theme === 'custom' ? nextSettings.page : isNight ? '#122628' : '#f7f8f3';
-			const dashboardSurface = nextSettings.theme === 'custom' ? nextSettings.surface : isNight ? '#1b3537' : '#ffffff';
+			document.documentElement.style.setProperty('--user-hover-accent', nextSettings.theme === 'custom' ? nextSettings.hoverAccent : isNight ? '#d5ee9b' : nextSettings.hoverAccent);
+			document.documentElement.style.setProperty('--user-hover-surface', nextSettings.theme === 'custom' ? nextSettings.hoverSurface : isNight ? '#234047' : nextSettings.hoverSurface);
+			const dashboardPage = nextSettings.theme === 'custom' ? nextSettings.page : isNight ? '#101f23' : '#f7f8f3';
+			const dashboardSurface = nextSettings.theme === 'custom' ? nextSettings.surface : isNight ? '#1a3136' : '#ffffff';
 			document.documentElement.style.setProperty('--dashboard-page', dashboardPage);
 			document.documentElement.style.setProperty('--dashboard-surface', dashboardSurface);
 			document.documentElement.style.setProperty('--dashboard-ink-user', nextSettings.theme === 'custom' ? nextSettings.text : isNight ? '#e8f0e6' : '#183d3e');

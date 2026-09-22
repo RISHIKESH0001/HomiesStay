@@ -6,6 +6,9 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import StudentDashboard from '../dashboard/Student/StudentDashboard';
 import OwnerDashboard from '../dashboard/Owner/OwnerDashboard';
+import MyProperties from '../dashboard/Owner/MyProperties';
+import OwnerEnquiries from '../dashboard/Owner/OwnerEnquiries';
+import OwnerApplications from '../dashboard/Owner/OwnerApplications';
 import AdminDashboard from '../dashboard/Admin/AdminDashboard';
 import About from '../pages/About/About';
 import Contact from '../pages/Contact/Contact';
@@ -56,6 +59,9 @@ const AppRoutes = () => {
 				<Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
 				<Route path="/dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
 				<Route path="/owner/dashboard" element={<ProtectedRoute role="owner"><OwnerDashboard /></ProtectedRoute>} />
+				<Route path="/owner/properties" element={<ProtectedRoute role="owner"><MyProperties /></ProtectedRoute>} />
+				<Route path="/owner/enquiries" element={<ProtectedRoute role="owner"><OwnerEnquiries /></ProtectedRoute>} />
+				<Route path="/owner/applications" element={<ProtectedRoute role="owner"><OwnerApplications /></ProtectedRoute>} />
 				<Route path="/admin/dashboard" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
 				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>

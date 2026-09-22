@@ -5,6 +5,7 @@ import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import { roomBaruipur1, roomBaruipur2, roomBaruipur3, roomBaruipur4, roomBaruipur5, roomBengaluru1, roomHyderabad1, roomKolkata1, roomKolkata2, roomModern1, roomModern2, roomModern3, roomPune1, roomPune2, roomWorkspace } from '../../assets/hostelImages';
+import { readStoredProperties, toPublicHostel } from '../../services/propertyStorage';
 
 const hostels = [
 	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 8,500', rating: '4.8', distance: 1.2, image: roomBengaluru1 },
@@ -75,6 +76,8 @@ const getSearchContextLabel = ({ college, location, directMatches }) => {
 
 const SearchResults = () => {
 	const [params] = useSearchParams();
+	const [ownerListings] = useState(() => readStoredProperties().filter((property) => property.status === 'Live').map(toPublicHostel));
+	const allHostels = useMemo(() => [...hostels, ...ownerListings], [ownerListings]);
 	const [distance, setDistance] = useState('10');
 	const [rent, setRent] = useState('any');
 	const [gender, setGender] = useState('any');
@@ -85,11 +88,11 @@ const SearchResults = () => {
 	const budget = params.get('budget');
 	const directMatches = useMemo(() => {
 		const normalizedQuery = query.toLowerCase();
-		return hostels.filter((hostel) => {
+		return allHostels.filter((hostel) => {
 			const searchable = `${hostel.name} ${hostel.location} ${hostel.college}`.toLowerCase();
 			return !normalizedQuery || normalizedQuery.split(/\s+/).every((word) => searchable.includes(word));
 		});
-	}, [query]);
+	}, [allHostels, query]);
 	const searchLabel = getSearchLabel({ query: freeTextQuery || college || location, college, location, directMatches }) || 'your next campus';
 	const searchContextLabel = getSearchContextLabel({ college, location, directMatches });
 	const hostelSearchText = (freeTextQuery || college).toLowerCase();
@@ -99,7 +102,7 @@ const SearchResults = () => {
 		const normalizedQuery = query.toLowerCase();
 		const nearbyLocations = new Set(directMatches.map((hostel) => hostel.location.toLowerCase()));
 		const nearbyColleges = new Set(directMatches.map((hostel) => hostel.college.toLowerCase()));
-		return hostels
+		return allHostels
 			.filter((hostel) => {
 				const searchable = `${hostel.name} ${hostel.location} ${hostel.college}`.toLowerCase();
 				const matchesQuery = !normalizedQuery || normalizedQuery.split(/\s+/).every((word) => searchable.includes(word));
@@ -112,7 +115,7 @@ const SearchResults = () => {
 				return (matchesQuery || isNearby) && matchesDistance && matchesRent && matchesGender && matchesBudget;
 			})
 			.sort((first, second) => first.distance - second.distance);
-	}, [budget, directMatches, distance, gender, query, rent]);
+	}, [allHostels, budget, directMatches, distance, gender, query, rent]);
 	const recommendations = useMemo(() => {
 		const resultNames = new Set(results.map((hostel) => hostel.name));
 		return reviews.filter((review) => resultNames.has(review.stay)).slice(0, 3);
