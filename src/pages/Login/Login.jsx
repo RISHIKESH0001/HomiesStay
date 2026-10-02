@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Button from '../../components/common/Button';
 import { login } from '../../redux/authSlice';
 
 const Login = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const dispatch = useDispatch();
 	const [showPassword, setShowPassword] = useState(false);
 	const [selectedRole, setSelectedRole] = useState('student');
@@ -48,7 +49,9 @@ const Login = () => {
 			const initials = username.slice(0, 2).toUpperCase();
 			dispatch(login({ name: username, username, initials, role }));
 			setIsSuccess(true);
-			navigate('/', { replace: true });
+			const requestedPath = location.state?.from;
+			const destination = requestedPath ? `${requestedPath.pathname}${requestedPath.search || ''}${requestedPath.hash || ''}` : role === 'owner' ? '/owner/dashboard' : role === 'admin' ? '/admin/dashboard' : '/dashboard';
+			navigate(destination, { replace: true, state: requestedPath?.state });
 		}
 	};
 

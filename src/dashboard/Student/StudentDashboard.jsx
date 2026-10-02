@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowUpRight, FiBookmark, FiChevronRight, FiMapPin, FiMessageCircle, FiSearch, FiStar } from 'react-icons/fi';
 import DashboardLayout from '../../layouts/DashboardLayout';
+import { getPropertySlug } from '../../services/propertyStorage';
 import { getTimeGreeting } from '../../utils/greeting';
 
 const stays = [
@@ -44,7 +45,7 @@ const StudentDashboard = () => {
 						<h1>{greeting}, {username}<span>.</span></h1>
 						<p className="dashboard-subtitle">A better stay is closer than you think.</p>
 					</div>
-					<a className="dashboard-primary-action" href="#explore"><FiSearch /> Explore homes <FiArrowUpRight /></a>
+					<a className="dashboard-primary-action" href="/dashboard/explore-stays"><FiSearch /> Explore homes <FiArrowUpRight /></a>
 				</section>
 
 				<section className="dashboard-search-panel" aria-label="Find a home">
@@ -64,14 +65,14 @@ const StudentDashboard = () => {
 				<section className="dashboard-stay-grid">
 					{visibleStays.map((stay) => <article className="dashboard-stay-card" key={stay.name}>
 						<div className={`dashboard-stay-image ${stay.color}`}><span>{stay.initials}</span><button className={savedHomes.includes(stay.name) ? 'stay-save saved' : 'stay-save'} type="button" onClick={() => toggleSaved(stay.name)} aria-label={`Save ${stay.name}`}><FiBookmark /></button><span className="stay-verified">Verified</span></div>
-						<div className="dashboard-stay-body"><div className="dashboard-stay-type">{stay.type}<span><FiStar /> {stay.rating}</span></div><h3>{stay.name}</h3><p><FiMapPin /> {stay.area}</p><div className="dashboard-stay-footer"><strong>{stay.price}<small>/ month</small></strong><a href={`/hostels/${stay.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`} aria-label={`View ${stay.name}`}><FiArrowUpRight /></a></div></div>
+						<div className="dashboard-stay-body"><div className="dashboard-stay-type">{stay.type}<span><FiStar /> {stay.rating}</span></div><h3>{stay.name}</h3><p><FiMapPin /> {stay.area}</p><div className="dashboard-stay-footer"><strong>{stay.price}<small>/ month</small></strong><a href={`/hostels/${getPropertySlug(stay.name)}`} aria-label={`View ${stay.name}`}><FiArrowUpRight /></a></div></div>
 					</article>)}
 					{visibleStays.length === 0 && <p className="dashboard-empty-state">No stays match that search yet. Try another neighbourhood.</p>}
 				</section>
 
 				<section className="dashboard-bottom-grid">
-					<div className="dashboard-activity-panel"><div className="dashboard-section-heading compact"><div><p className="dashboard-eyebrow">Keep moving</p><h2>Recent activity</h2></div><a href="#activity">See all <FiChevronRight /></a></div><div className="activity-row"><span className="activity-mark green"><FiBookmark /></span><div><strong>You saved The Olive House</strong><span>Yesterday at 6:42 PM</span></div><FiChevronRight /></div><div className="activity-row"><span className="activity-mark yellow"><FiMessageCircle /></span><div><strong>Enquiry sent to Casa Nook</strong><span>Monday at 10:15 AM</span></div><FiChevronRight /></div></div>
-					<div className="dashboard-tip"><span className="tip-spark">✦</span><p className="dashboard-eyebrow">A small tip</p><h2>Complete your profile to get better matches.</h2><p>Tell us what matters to you and we’ll tune your recommendations.</p><a href="#profile">Complete profile <FiArrowUpRight /></a></div>
+					<div className="dashboard-activity-panel"><div className="dashboard-section-heading compact"><div><p className="dashboard-eyebrow">Keep moving</p><h2>Recent activity</h2></div><a href="/dashboard/activity">See all <FiChevronRight /></a></div><div className="activity-row"><span className="activity-mark green"><FiBookmark /></span><div><strong>You saved The Olive House</strong><span>Yesterday at 6:42 PM</span></div><FiChevronRight /></div><div className="activity-row"><span className="activity-mark yellow"><FiMessageCircle /></span><div><strong>Enquiry sent to Casa Nook</strong><span>Monday at 10:15 AM</span></div><FiChevronRight /></div></div>
+					<div className="dashboard-tip"><span className="tip-spark">✦</span><p className="dashboard-eyebrow">A small tip</p><h2>Complete your profile to get better matches.</h2><p>Tell us what matters to you and we’ll tune your recommendations.</p><a href="/profile">Complete profile <FiArrowUpRight /></a></div>
 				</section>
 			</main>
 		</DashboardLayout>

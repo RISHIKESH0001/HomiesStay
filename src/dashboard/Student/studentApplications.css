@@ -1,0 +1,74 @@
+.hostel-enquire-button { text-decoration: none; }
+.owner-admission-summary > a { display: inline-flex; align-items: center; gap: 0.35rem; color: #5d824a; font-size: 0.68rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.owner-admission-summary > a svg { width: 0.75rem; }
+
+.student-application-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 0.8fr); align-items: start; gap: 1rem; margin-top: 1.5rem; }
+.student-application-form { min-width: 0; margin-top: 0; padding: 0 1.35rem; }
+.student-form-section { padding: 1.35rem 0; border-bottom: 1px solid var(--dashboard-line); }
+.student-form-heading { display: flex; align-items: start; gap: 0.7rem; margin-bottom: 1rem; }
+.student-form-heading > span { display: grid; width: 1.8rem; height: 1.8rem; flex: 0 0 auto; place-items: center; border-radius: 50%; color: #517456; background: #eaf1e5; font-size: 0.63rem; font-weight: 800; }
+.student-form-heading h2 { margin: 0; color: var(--dashboard-ink); font-family: Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 500; }
+.student-form-heading p { margin: 0.3rem 0 0; color: #81958e; font-size: 0.68rem; }
+.student-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+.student-form-grid label, .student-message-field { display: grid; gap: 0.35rem; min-width: 0; color: #60786d; font-size: 0.68rem; font-weight: 700; }
+.student-form-grid input, .student-form-grid select, .student-message-field textarea { width: 100%; min-width: 0; min-height: 2.7rem; padding: 0.65rem 0.7rem; border: 1px solid #dce5dc; border-radius: 0.25rem; color: #244847; background: #fff; font: inherit; font-size: 0.72rem; }
+.student-message-field textarea { min-height: 6rem; resize: vertical; }
+.student-needs-fieldset { margin: 1rem 0; padding: 0; border: 0; }
+.student-needs-fieldset legend { margin-bottom: 0.55rem; color: #60786d; font-size: 0.68rem; font-weight: 700; }
+.student-needs-fieldset > div { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.student-needs-fieldset label { position: relative; }
+.student-needs-fieldset input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.student-needs-fieldset label span { display: block; padding: 0.5rem 0.65rem; border: 1px solid #dce5dc; border-radius: 0.2rem; color: #60786d; cursor: pointer; font-size: 0.64rem; }
+.student-needs-fieldset input:checked + span { border-color: #8ca978; color: #3e654b; background: #eef4e9; }
+.student-needs-fieldset input:focus-visible + span { outline: 2px solid #56795b; outline-offset: 2px; }
+.student-application-submit { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; }
+.student-application-submit p { display: flex; align-items: start; gap: 0.45rem; max-width: 22rem; margin: 0; color: #81958e; font-size: 0.62rem; line-height: 1.5; }
+.student-application-submit p svg { width: 0.9rem; flex: 0 0 auto; color: #77964e; }
+.student-application-submit button, .student-applications-empty > a { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; min-height: 2.8rem; padding: 0.65rem 0.9rem; border: 0; border-radius: 0.2rem; color: #fff; background: #315b50; cursor: pointer; font: inherit; font-size: 0.72rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.student-application-submit button svg, .student-applications-empty > a svg { width: 0.9rem; }
+.student-application-summary { position: sticky; top: 1.2rem; padding: 1.25rem; border: 1px solid var(--dashboard-line); border-radius: 0.45rem; background: var(--dashboard-surface, #fff); }
+.student-application-stay-icon { display: grid; width: 2.7rem; height: 2.7rem; margin-top: 1rem; place-items: center; border-radius: 0.3rem; color: #315b50; background: #e8f0e5; }
+.student-application-stay-icon svg { width: 1.2rem; }
+.student-application-summary h2 { margin: 0.65rem 0 0; color: var(--dashboard-ink); font-family: Georgia, 'Times New Roman', serif; font-size: 1.4rem; font-weight: 500; }
+.student-application-summary > p:not(.dashboard-eyebrow) { display: flex; align-items: center; gap: 0.35rem; color: #81958e; font-size: 0.68rem; }
+.student-application-summary > p svg { width: 0.8rem; }
+.student-application-summary-line { display: flex; justify-content: space-between; gap: 0.75rem; padding: 0.65rem 0; border-top: 1px solid var(--dashboard-line); font-size: 0.66rem; }
+.student-application-summary-line span { color: #81958e; }
+.student-application-summary-line strong { color: var(--dashboard-ink); text-align: right; }
+.student-application-summary-note { display: flex; gap: 0.45rem; margin-top: 0.75rem; padding: 0.7rem; color: #627b6b; background: #f0f5eb; font-size: 0.62rem; line-height: 1.45; }
+.student-application-summary-note svg { width: 0.85rem; flex: 0 0 auto; }
+.student-application-summary > a { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.8rem; color: #55755b; font-size: 0.67rem; font-weight: 800; text-decoration: none; }
+.student-application-summary > a svg { width: 0.8rem; }
+.student-applications-list { margin-top: 1rem; }
+.student-application-card { display: flex; gap: 0.85rem; padding: 1rem 0; border-top: 1px solid var(--dashboard-line); }
+.student-application-card-icon { display: grid; width: 2.4rem; height: 2.4rem; flex: 0 0 auto; place-items: center; border-radius: 50%; color: #4e7259; background: #e8f0e5; }
+.student-application-card-main { flex: 1; min-width: 0; }
+.student-application-card-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.student-application-card-heading strong, .student-application-card-heading span { display: block; }
+.student-application-card-heading strong { color: var(--dashboard-ink); font-size: 0.78rem; }
+.student-application-card-heading span { margin-top: 0.25rem; color: #81958e; font-size: 0.65rem; }
+.application-status { padding: 0.3rem 0.5rem; border-radius: 1rem; color: #567d8a; background: #e1eef0; font-size: 0.6rem; font-style: normal; font-weight: 800; }
+.application-status.accepted { color: #5c854f; background: #e6f1df; }
+.application-status.declined { color: #a75e55; background: #f9e6e2; }
+.student-application-card-meta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.75rem; }
+.student-application-card-meta span { display: inline-flex; align-items: center; gap: 0.3rem; color: #72877e; font-size: 0.62rem; }
+.student-application-card-meta svg { width: 0.75rem; }
+.student-application-card-main > p { color: #72877e; font-size: 0.65rem; }
+.student-application-open-link { display: inline-flex; align-items: center; gap: 0.3rem; color: #5b7b4f; font-size: 0.65rem; font-weight: 800; text-decoration: none; }
+.student-application-open-link svg { width: 0.75rem; }
+.student-applications-empty { display: grid; justify-items: center; margin-top: 1.5rem; padding: 3rem 1.25rem; border: 1px dashed #cfdcc9; border-radius: 0.4rem; text-align: center; }
+.student-applications-empty > span { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: 50%; color: #517456; background: #eaf1e5; }
+.student-applications-empty h2 { margin: 0; color: var(--dashboard-ink); font-family: Georgia, 'Times New Roman', serif; font-size: 1.45rem; font-weight: 500; }
+.student-applications-empty > p:not(.dashboard-eyebrow) { max-width: 27rem; color: #81958e; font-size: 0.7rem; line-height: 1.5; }
+.student-application-success { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+
+html[data-theme='night'] .student-application-form, html[data-theme='night'] .student-application-summary { border-color: var(--night-border); background: var(--night-surface); }
+html[data-theme='night'] .student-form-heading h2, html[data-theme='night'] .student-application-summary h2, html[data-theme='night'] .student-application-summary-line strong, html[data-theme='night'] .student-application-card-heading strong, html[data-theme='night'] .student-applications-empty h2 { color: var(--night-text); }
+html[data-theme='night'] .student-form-heading p, html[data-theme='night'] .student-form-grid label, html[data-theme='night'] .student-message-field, html[data-theme='night'] .student-application-summary-line span, html[data-theme='night'] .student-application-card-heading span, html[data-theme='night'] .student-application-card-meta span, html[data-theme='night'] .student-application-card-main > p { color: var(--night-muted); }
+html[data-theme='night'] .student-form-grid input, html[data-theme='night'] .student-form-grid select, html[data-theme='night'] .student-message-field textarea { border-color: var(--night-border-strong); color: var(--night-text); background: var(--night-surface-raised); }
+html[data-theme='night'] .student-form-section, html[data-theme='night'] .student-application-summary-line, html[data-theme='night'] .student-application-card { border-color: var(--night-border); }
+html[data-theme='night'] .student-application-summary-note { color: var(--night-muted); background: var(--night-surface-raised); }
+html[data-theme='night'] .student-application-card-icon, html[data-theme='night'] .student-form-heading > span { color: var(--night-accent); background: var(--night-surface-raised); }
+
+@media (max-width: 850px) { .student-application-layout { grid-template-columns: minmax(0, 1fr); } .student-application-summary { position: static; grid-row: 1; } }
+@media (max-width: 560px) { .student-application-form { padding: 0 0.9rem; } .student-form-grid { grid-template-columns: minmax(0, 1fr); } .student-application-submit { align-items: stretch; flex-direction: column; } .student-application-submit button { width: 100%; } .student-application-card { align-items: start; } .student-application-card-heading { flex-direction: column; gap: 0.5rem; } }

@@ -1,0 +1,118 @@
+.owner-property-review-note { align-self: center; color: #71867d; font-size: 0.65rem; font-weight: 700; }
+.owner-property-card-link { min-height: 2.35rem; padding: 0.5rem 0.7rem; border: 1px solid #c9d9c5; border-radius: 0.22rem; color: #315b50; background: #f0f5eb; cursor: pointer; font: inherit; font-size: 0.68rem; font-weight: 800; text-decoration: none; }
+.owner-property-card-link:hover { border-color: #78994e; color: #244447; background: #e4efd8; }
+.owner-property-card-link:focus-visible { outline: 3px solid rgba(102, 142, 75, 0.55); outline-offset: 2px; }
+.owner-property-card-publish { border-color: #315b50; color: #fff; background: #315b50; }
+.owner-property-card-publish:hover { border-color: #24483f; color: #fff; background: #24483f; }
+.owner-property-card-edit { border-color: #c9d9c5; color: #315b50; background: #f0f5eb; }
+.owner-property-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.owner-property-form-actions button:first-child { border-color: #b9cdc2; color: #365d52; background: #f0f5eb; }
+.owner-property-form-actions button:first-child:hover { border-color: #78994e; color: #244447; background: #e4efd8; }
+.owner-property-form-actions button:focus-visible { outline: 3px solid rgba(102, 142, 75, 0.55); outline-offset: 2px; }
+.owner-property-form-actions button[type='submit'] { border-color: #315b50; color: #fff; background: #315b50; }
+.owner-property-form-actions button[type='submit']:hover { border-color: #24483f; background: #24483f; }
+.admin-property-review-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.38fr); align-items: start; gap: 1rem; margin-top: 1.5rem; }
+.admin-review-decision { position: sticky; top: 1rem; display: grid; gap: 0.75rem; margin-top: 0; }
+.admin-review-decision h2, .listing-payment-panel h2 { margin: 0; color: var(--dashboard-ink); font-family: Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 500; }
+.admin-review-decision textarea { width: 100%; min-height: 7rem; padding: 0.7rem; border: 1px solid var(--dashboard-line); border-radius: 0.25rem; color: var(--dashboard-ink); background: var(--dashboard-surface, #fff); font: inherit; font-size: 0.72rem; resize: vertical; }
+.admin-review-decision > p:not(.dashboard-eyebrow) { margin: 0; color: #81958e; font-size: 0.67rem; line-height: 1.5; }
+.admin-review-decision > button { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; min-height: 2.65rem; padding: 0.65rem; border: 0; border-radius: 0.2rem; color: #fff; background: #315b50; cursor: pointer; font: inherit; font-size: 0.7rem; font-weight: 800; }
+.admin-review-decision > button.request-changes-button { border: 1px solid #e5d4c8; color: #8a5b45; background: #fffaf6; }
+.admin-review-decision > button svg { width: 0.85rem; }
+.admin-review-decision > a { color: #5b7b4f; font-size: 0.68rem; font-weight: 800; text-align: center; text-decoration: none; }
+.admin-review-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 0.5rem; margin-top: 1.2rem; }
+.admin-review-photos img { width: 100%; aspect-ratio: 4 / 3; border-radius: 0.25rem; object-fit: cover; }
+.admin-review-empty { padding: 1rem 0; color: #81958e; font-size: 0.72rem; }
+
+.listing-payment-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.75fr); align-items: start; gap: 1rem; margin-top: 1.5rem; }
+.listing-payment-panel, .listing-payment-summary { margin-top: 0; }
+.listing-fee-breakdown { margin-top: 1.2rem; border-top: 1px solid var(--dashboard-line); }
+.listing-fee-breakdown > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--dashboard-line); color: #71867d; font-size: 0.7rem; }
+.listing-fee-breakdown strong { color: var(--dashboard-ink); text-align: right; }
+.listing-fee-breakdown .listing-fee-total { color: var(--dashboard-ink); font-size: 0.8rem; font-weight: 800; }
+.listing-fee-breakdown .listing-fee-total strong { font-size: 1rem; }
+.listing-fee-disclaimer, .listing-payment-summary-note { display: flex; gap: 0.5rem; margin: 1rem 0; padding: 0.8rem; color: #69816f; background: #eef4e9; font-size: 0.65rem; line-height: 1.5; }
+.listing-fee-disclaimer svg { width: 0.9rem; flex: 0 0 auto; }
+.listing-payment-button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.9rem; padding: 0.7rem 1rem; border: 0; border-radius: 0.2rem; color: #fff; background: #315b50; cursor: pointer; font: inherit; font-size: 0.75rem; font-weight: 800; }
+.listing-payment-success { display: flex; align-items: center; gap: 0.45rem; color: #527b52; font-size: 0.75rem; font-weight: 800; }
+.listing-payment-summary h2 { margin: 0.65rem 0; color: var(--dashboard-ink); font-family: Georgia, 'Times New Roman', serif; font-size: 1.35rem; font-weight: 500; }
+.listing-payment-summary > p:not(.dashboard-eyebrow) { color: #788e82; font-size: 0.68rem; }
+.listing-payment-summary > div:not(.student-application-stay-icon) { display: flex; align-items: center; gap: 0.45rem; padding: 0.65rem 0; border-top: 1px solid var(--dashboard-line); color: #70867a; font-size: 0.68rem; }
+.listing-payment-summary > div svg { width: 0.85rem; }
+
+.resident-stay-panel { margin-top: 1.5rem; padding: 1.35rem; }
+.resident-stay-heading { display: flex; align-items: center; gap: 0.8rem; }
+.resident-stay-heading > div:nth-child(2) { flex: 1; min-width: 0; }
+.resident-stay-heading h2 { margin: 0.2rem 0; color: var(--dashboard-ink); font-family: Georgia, 'Times New Roman', serif; font-size: 1.5rem; font-weight: 500; }
+.resident-stay-heading > div > span { display: inline-flex; align-items: center; gap: 0.3rem; color: #81958e; font-size: 0.67rem; }
+.resident-stay-heading > a { display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border: 1px solid var(--dashboard-line); color: #5b7b4f; }
+.resident-summary { margin: 1rem 0; }
+.resident-balance-strip { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem; padding: 0.8rem; color: #66806f; background: #f0f5eb; font-size: 0.66rem; }
+.resident-balance-strip > span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.resident-balance-strip svg { width: 0.8rem; }
+.resident-balance-strip strong { color: #315b50; }
+.resident-rent-table-wrap { overflow-x: auto; margin-top: 0.8rem; }
+.resident-rent-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+.resident-rent-table th, .resident-rent-table td { padding: 0.7rem 0.55rem; border-bottom: 1px solid var(--dashboard-line); font-size: 0.64rem; }
+.resident-rent-table th { color: #81958e; font-weight: 700; }
+.resident-rent-table td { color: var(--dashboard-ink); }
+.rent-fine-amount { color: #a75e55 !important; font-weight: 800; }
+.rent-pay-button { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.45rem 0.6rem; border: 0; border-radius: 0.2rem; color: #fff; background: #315b50; cursor: pointer; font: inherit; font-size: 0.62rem; font-weight: 800; }
+.rent-pay-button svg { width: 0.75rem; }
+.rent-status-paid { display: inline-flex; align-items: center; gap: 0.25rem; color: #548152; font-size: 0.62rem; font-weight: 800; }
+.rent-status-paid svg { width: 0.75rem; }
+.resident-stay-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; margin-top: 0.85rem; color: #81958e; font-size: 0.62rem; }
+.resident-stay-footer > span, .resident-stay-footer a { display: inline-flex; align-items: center; gap: 0.3rem; }
+.resident-stay-footer a { color: #5b7b4f; font-weight: 800; text-decoration: none; }
+.resident-stay-footer svg { width: 0.75rem; }
+.owner-rent-card { align-items: start; }
+.owner-rent-card .owner-enquiry-card-copy { flex: 1; }
+.owner-rent-charge-list { display: grid; gap: 0.45rem; margin-top: 0.75rem; }
+.owner-rent-charge-list > div { display: grid; grid-template-columns: minmax(8rem, 1fr) 2fr auto; align-items: center; gap: 0.75rem; padding: 0.55rem; border: 1px solid var(--dashboard-line); background: var(--dashboard-surface, #fff); }
+.owner-rent-charge-list span, .owner-rent-charge-list strong { color: #6f847a; font-size: 0.6rem; }
+.owner-rent-charge-list em { color: #9b7547; font-size: 0.59rem; font-style: normal; font-weight: 800; }
+.owner-rent-charge-list em.paid { color: #548152; }
+.owner-rent-charge-list em.overdue { color: #a75e55; }
+
+html[data-theme='night'] .admin-review-decision textarea,
+html[data-theme='night'] .listing-payment-panel,
+html[data-theme='night'] .listing-payment-summary,
+html[data-theme='night'] .resident-stay-panel { border-color: var(--night-border); background: var(--night-surface); color: var(--night-text); }
+html[data-theme='night'] .admin-review-decision h2,
+html[data-theme='night'] .listing-payment-panel h2,
+html[data-theme='night'] .listing-payment-summary h2,
+html[data-theme='night'] .resident-stay-heading h2,
+html[data-theme='night'] .listing-fee-breakdown strong,
+html[data-theme='night'] .resident-rent-table td { color: var(--night-text); }
+html[data-theme='night'] .listing-fee-breakdown > div,
+html[data-theme='night'] .resident-rent-table th,
+html[data-theme='night'] .resident-stay-heading > div > span { color: var(--night-muted); }
+html[data-theme='night'] .listing-fee-breakdown > div,
+html[data-theme='night'] .listing-payment-summary > div:not(.student-application-stay-icon),
+html[data-theme='night'] .resident-rent-table th,
+html[data-theme='night'] .resident-rent-table td { border-color: var(--night-border); }
+html[data-theme='night'] .listing-fee-disclaimer,
+html[data-theme='night'] .listing-payment-summary-note,
+html[data-theme='night'] .resident-balance-strip { color: var(--night-muted); background: var(--night-surface-raised); }
+html[data-theme='night'] .owner-rent-charge-list > div { border-color: var(--night-border); background: var(--night-surface-raised); }
+html[data-theme='night'] .owner-rent-charge-list span,
+html[data-theme='night'] .owner-rent-charge-list strong { color: var(--night-muted); }
+html[data-theme='night'] .owner-property-card-link,
+html[data-theme='night'] .owner-property-card-edit,
+html[data-theme='night'] .owner-property-form-actions button:first-child { border-color: var(--night-border-strong); color: var(--night-text); background: var(--night-surface-raised); }
+html[data-theme='night'] .owner-property-card-publish,
+html[data-theme='night'] .owner-property-form-actions button[type='submit'] { border-color: var(--night-accent); color: #142326; background: var(--night-accent); }
+html[data-theme='night'] .owner-property-card-publish:hover,
+html[data-theme='night'] .owner-property-form-actions button[type='submit']:hover { background: var(--night-accent-strong); }
+
+@media (max-width: 850px) {
+  .admin-property-review-layout, .listing-payment-layout { grid-template-columns: minmax(0, 1fr); }
+  .admin-review-decision { position: static; }
+}
+@media (max-width: 650px) {
+  .resident-stay-panel { padding: 0.95rem; }
+  .resident-balance-strip { align-items: start; flex-direction: column; }
+  .owner-rent-card { flex-wrap: wrap; }
+  .owner-rent-charge-list > div { grid-template-columns: minmax(0, 1fr) auto; }
+  .owner-rent-charge-list strong { grid-column: 1 / -1; grid-row: 2; }
+}

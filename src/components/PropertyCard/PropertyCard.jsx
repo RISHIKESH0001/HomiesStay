@@ -1,9 +1,8 @@
 import Button from '../common/Button';
-
-const getHostelSlug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+import { getPropertySlug } from '../../services/propertyStorage';
 
 const PropertyCard = ({ hostel }) => {
-	const hostelSlug = hostel.slug || getHostelSlug(hostel.name);
+	const hostelSlug = hostel.slug || getPropertySlug(hostel.name);
 
 	return (
 		<article className="property-card">
