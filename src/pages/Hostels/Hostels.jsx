@@ -1,77 +1,70 @@
-import { useMemo, useState } from 'react';
-import { FiArrowUpRight, FiClock, FiMapPin, FiNavigation, FiSliders } from 'react-icons/fi';
+import { useEffect, useMemo, useState } from 'react';
+import { FiArrowUpRight, FiClock, FiMapPin, FiNavigation } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/Navbar/NavBar';
 import Footer from '../../components/Footer/Footer';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
-import { roomBaruipur1, roomBaruipur2, roomBaruipur3, roomBaruipur4, roomBaruipur5, roomBengaluru1, roomHyderabad1, roomKolkata1, roomKolkata2, roomPune1, roomPune2, roomWorkspace } from '../../assets/hostelImages';
-import { readStoredProperties, toPublicHostel } from '../../services/propertyStorage';
+import { getPublicProperties } from '../../services/propertyCatalog';
 
-const hostels = [
-	{ name: 'The Nest Residency', location: 'Koramangala, Bengaluru', college: 'Christ University', gender: 'Unisex', price: 'Rs. 8,500', rating: '4.8', image: roomBengaluru1, tag: 'Best match' },
-	{ name: 'Campus Cove', location: 'Hinjewadi, Pune', college: 'Symbiosis Institute', gender: 'Unisex', price: 'Rs. 7,200', rating: '4.7', image: roomPune1, tag: 'Popular nearby' },
-	{ name: 'Olive House Madhapur', location: 'Madhapur, Hyderabad', college: 'IIIT Hyderabad', gender: 'Unisex', price: 'Rs. 9,000', rating: '4.9', image: roomHyderabad1, tag: 'Top rated' },
-	{ name: 'The Green Room', location: 'Salt Lake, Kolkata', college: 'IEM Kolkata', gender: 'Unisex', price: 'Rs. 6,800', rating: '4.6', image: roomKolkata1, tag: 'Value pick' },
-	{ name: 'North Star Living', location: 'New Town, Kolkata', college: 'Techno India', gender: 'Unisex', price: 'Rs. 7,900', rating: '4.8', image: roomKolkata2, tag: 'New on Homies' },
-	{ name: 'Maple Co-Live', location: 'Viman Nagar, Pune', college: 'MIT World Peace University', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.7', image: roomPune2, tag: 'Move-in ready' },
-	{ name: 'Baruipur Student Nest', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 6,500', rating: '4.7', image: roomBaruipur1, tag: 'Campus nearby' },
-	{ name: 'Gargi Girls Residency', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,200', rating: '4.8', image: roomBaruipur4, tag: 'Popular with students' },
-	{ name: 'South Campus Boys Home', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 5,900', rating: '4.6', image: roomWorkspace, tag: 'Value pick' },
-	{ name: 'Greenfield Co-Living', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Unisex', price: 'Rs. 8,100', rating: '4.9', image: roomBaruipur3, tag: 'Top rated' },
-	{ name: 'Baruipur Scholars Stay', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Male', price: 'Rs. 6,800', rating: '4.7', image: roomBaruipur2, tag: 'Study friendly' },
-	{ name: 'Lakeview Girls Hostel', location: 'Baruipur, Kolkata', college: 'Gargi Memorial Institute of Technology', gender: 'Female', price: 'Rs. 7,600', rating: '4.8', image: roomBaruipur5, tag: 'Quiet stay' },
-];
-
-const recentSearches = ['Salt Lake, Kolkata', 'IIT Kharagpur', 'Hostels under Rs. 8,000'];
-const popularAreas = [
-	{ name: 'Kolkata', detail: '342 verified stays', tone: 'sage' },
-	{ name: 'Pune', detail: '218 verified stays', tone: 'yellow' },
-	{ name: 'Bengaluru', detail: '196 verified stays', tone: 'blue' },
-	{ name: 'Hyderabad', detail: '154 verified stays', tone: 'rose' },
-];
-
-const supportedLocations = [
-	{ name: 'Baruipur', latitude: 22.3654, longitude: 88.4325 },
-	{ name: 'Kolkata', latitude: 22.5726, longitude: 88.3639 },
-	{ name: 'Pune', latitude: 18.5204, longitude: 73.8567 },
-	{ name: 'Bengaluru', latitude: 12.9716, longitude: 77.5946 },
-	{ name: 'Hyderabad', latitude: 17.385, longitude: 78.4867 },
-];
-
-const getDistanceBetweenLocations = (latitude, longitude, location) => {
-	const latitudeDifference = (latitude - location.latitude) * 111;
-	const longitudeDifference = (longitude - location.longitude) * 111 * Math.cos((latitude * Math.PI) / 180);
+const recentSearchesKey = 'homies-stay-recent-searches';
+const getDistanceBetweenLocations = (latitude, longitude, property) => {
+	const latitudeDifference = (latitude - Number(property.latitude)) * 111;
+	const longitudeDifference = (longitude - Number(property.longitude)) * 111 * Math.cos((latitude * Math.PI) / 180);
 	return Math.sqrt(latitudeDifference ** 2 + longitudeDifference ** 2);
+};
+
+const readRecentSearches = () => {
+	try {
+		return JSON.parse(window.localStorage.getItem(recentSearchesKey) || '[]');
+	} catch {
+		return [];
+	}
 };
 
 const Hostels = () => {
 	const navigate = useNavigate();
-	const [ownerListings] = useState(() => readStoredProperties().filter((property) => property.status === 'Live').map(toPublicHostel));
+	const [hostels, setHostels] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [loadError, setLoadError] = useState('');
 	const [search, setSearch] = useState('');
-	const [location, setLocation] = useState('Kolkata');
+	const [location, setLocation] = useState('');
 	const [budget, setBudget] = useState('');
-	const [locationStatus, setLocationStatus] = useState('Based on your location');
+	const [recentSearches, setRecentSearches] = useState(readRecentSearches);
+	const [locationStatus, setLocationStatus] = useState('Choose a destination');
 	const [searchError, setSearchError] = useState('');
+
+	useEffect(() => {
+		let isCurrent = true;
+		getPublicProperties()
+			.then((page) => { if (isCurrent) setHostels(page.content); })
+			.catch(() => { if (isCurrent) setLoadError('Listings are temporarily unavailable. Please try again shortly.'); })
+			.finally(() => { if (isCurrent) setIsLoading(false); });
+		return () => { isCurrent = false; };
+	}, []);
 
 	const filteredHostels = useMemo(() => {
 		const query = search.trim().toLowerCase();
-		return [...hostels, ...ownerListings].filter((hostel) => {
+		return hostels.filter((hostel) => {
 			const matchesSearch = !query || [hostel.name, hostel.location, hostel.college].some((value) => value.toLowerCase().includes(query));
-			const price = Number(hostel.price.replace(/[^0-9]/g, ''));
-			const matchesBudget = !budget || (budget === 'under-8000' ? price < 8000 : price >= 8000 && price <= 10000);
+			const matchesBudget = !budget || (budget === 'under-8000' ? hostel.monthlyRent < 8000 : hostel.monthlyRent >= 8000 && hostel.monthlyRent <= 10000);
 			return matchesSearch && matchesBudget;
 		});
-	}, [budget, ownerListings, search]);
+	}, [budget, hostels, search]);
+
+	const cities = [...new Set(hostels.map((hostel) => hostel.city).filter(Boolean))];
 
 	const handleSearch = (event) => {
 		event.preventDefault();
-		if (!search.trim()) {
+		const query = search.trim();
+		if (!query) {
 			setSearchError('Enter a city, area, college, or hostel name first.');
 			return;
 		}
 		setSearchError('');
-		const params = new URLSearchParams();
-		if (search.trim()) params.set('q', search.trim());
+		const nextSearches = [query, ...recentSearches.filter((item) => item.toLowerCase() !== query.toLowerCase())].slice(0, 5);
+		window.localStorage.setItem(recentSearchesKey, JSON.stringify(nextSearches));
+		setRecentSearches(nextSearches);
+		const params = new URLSearchParams({ q: query });
 		if (budget) params.set('budget', budget);
 		navigate(`/search-results?${params.toString()}`);
 	};
@@ -83,13 +76,20 @@ const Hostels = () => {
 		}
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
-				const nearestLocation = supportedLocations.reduce((nearest, candidate) => {
-					const candidateDistance = getDistanceBetweenLocations(position.coords.latitude, position.coords.longitude, candidate);
-					return candidateDistance < nearest.distance ? { location: candidate, distance: candidateDistance } : nearest;
-				}, { location: supportedLocations[0], distance: Number.POSITIVE_INFINITY }).location;
-				setLocation(nearestLocation.name);
-				setLocationStatus('Showing stays near your location');
-				navigate(`/search-results?location=${encodeURIComponent(nearestLocation.name)}`);
+			const locatedProperties = hostels.filter((property) => property.latitude != null && property.longitude != null && Number.isFinite(Number(property.latitude)) && Number.isFinite(Number(property.longitude)));
+			if (!locatedProperties.length) {
+				setLocationStatus('Location coordinates are not available for current listings');
+				return;
+			}
+			const nearestProperty = locatedProperties.reduce((nearest, property) => {
+				const distance = getDistanceBetweenLocations(position.coords.latitude, position.coords.longitude, property);
+				return distance < nearest.distance ? { property, distance } : nearest;
+			}, { property: locatedProperties[0], distance: Number.POSITIVE_INFINITY }).property;
+			const nearestLocation = nearestProperty.city;
+			setLocation(nearestLocation);
+			setSearch(nearestLocation);
+			setLocationStatus('Showing listings near your location');
+			navigate(`/search-results?location=${encodeURIComponent(nearestLocation)}`);
 			},
 			() => setLocationStatus('Location permission needed'),
 			{ enableHighAccuracy: false, timeout: 5000 },
@@ -101,8 +101,8 @@ const Hostels = () => {
 			<NavBar />
 			<main className="hostels-page">
 				<section className="hostels-hero">
-					<div className="hostels-hero-copy"><p className="hostels-kicker">Your next chapter starts here</p><h1>Find a place that feels like <em>home.</em></h1><p>Verified hostels and PGs around your campus, your commute, and your kind of living.</p></div>
-					<div className="hostels-location-note"><FiMapPin aria-hidden="true" /><span><strong>{locationStatus}</strong><small>{location}, India</small></span></div>
+					<div className="hostels-hero-copy"><p className="hostels-kicker">Your next chapter starts here</p><h1>Find a place that feels like <em>home.</em></h1><p>Browse approved stays published by Homies Stay property owners.</p></div>
+					<div className="hostels-location-note"><FiMapPin aria-hidden="true" /><span><strong>{locationStatus}</strong><small>{location || 'No location selected'}{location ? ', India' : ''}</small></span></div>
 				</section>
 
 				<section className="hostels-search-panel" aria-labelledby="hostel-search-title">
@@ -112,16 +112,16 @@ const Hostels = () => {
 						<label className="hostels-search-field"><span>Monthly budget</span><select value={budget} onChange={(event) => setBudget(event.target.value)}><option value="">Any budget</option><option value="under-8000">Under Rs. 8,000</option><option value="8000-10000">Rs. 8,000 - 10,000</option></select></label>
 						<button className="hostels-search-button" type="submit">Search stays <FiArrowUpRight aria-hidden="true" /></button>
 					</form>{searchError && <p className="hostels-search-error" role="alert">{searchError}</p>}
-					<div className="hostels-search-meta"><span><FiClock aria-hidden="true" /> Recently searched</span>{recentSearches.map((item) => <button key={item} type="button" onClick={() => setSearch(item.split(',')[0])}>{item}</button>)}<button className="hostels-use-location" type="button" onClick={useCurrentLocation}><FiNavigation aria-hidden="true" /> Use current location</button></div>
+					<div className="hostels-search-meta"><span><FiClock aria-hidden="true" /> Recent searches</span>{recentSearches.map((item) => <button key={item} type="button" onClick={() => setSearch(item)}>{item}</button>)}<button className="hostels-use-location" type="button" onClick={useCurrentLocation}><FiNavigation aria-hidden="true" /> Use current location</button></div>
 				</section>
 
-				<section className="hostels-section hostels-recommendations" aria-labelledby="recommendations-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Curated around you</p><h2 id="recommendations-title">Recommended near {location}</h2><p>Stays with the right balance of distance, comfort, and monthly rent.</p></div><button className="hostels-filter-button" type="button"><FiSliders aria-hidden="true" /> Filters</button></div><div className="property-grid">{[...hostels, ...ownerListings].slice(0, 3).map((hostel) => <div className="hostel-recommendation" key={hostel.name}><span>{hostel.tag}</span><PropertyCard hostel={hostel} /></div>)}</div></section>
+				<section className="hostels-section hostels-recommendations" aria-labelledby="recommendations-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Recently approved</p><h2 id="recommendations-title">Available stays</h2><p>Listings visible here are published and approved.</p></div></div>{isLoading ? <p role="status">Loading available stays…</p> : loadError ? <p role="alert">{loadError}</p> : hostels.length ? <div className="property-grid">{hostels.slice(0, 3).map((hostel) => <PropertyCard hostel={hostel} key={hostel.id} />)}</div> : <div className="hostels-empty"><h3>No approved stays yet.</h3><p>Once property owners publish approved listings, they’ll appear here.</p></div>}</section>
 
-				<section className="hostels-section hostels-browse" aria-labelledby="browse-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Make it yours</p><h2 id="browse-title">Browse all stays</h2><p>{filteredHostels.length} verified homes ready for your move.</p></div></div><div className="property-grid">{filteredHostels.map((hostel) => <PropertyCard key={hostel.name} hostel={hostel} />)}</div>{filteredHostels.length === 0 && <div className="hostels-empty"><h3>No exact matches yet.</h3><p>Try a nearby city, college, or a wider budget.</p><button type="button" onClick={() => { setSearch(''); setBudget(''); }}>Clear search</button></div>}</section>
+				<section className="hostels-section hostels-browse" aria-labelledby="browse-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Live from the database</p><h2 id="browse-title">Browse all stays</h2><p>{isLoading ? 'Loading listings…' : `${filteredHostels.length} approved listings`}</p></div></div>{!isLoading && !loadError && filteredHostels.length > 0 && <div className="property-grid">{filteredHostels.map((hostel) => <PropertyCard key={hostel.id} hostel={hostel} />)}</div>}{!isLoading && !loadError && filteredHostels.length === 0 && <div className="hostels-empty"><h3>{hostels.length ? 'No exact matches.' : 'No approved listings yet.'}</h3><p>{hostels.length ? 'Try a different search or budget.' : 'New listings will appear here after an owner submits one and an administrator approves it.'}</p>{hostels.length > 0 && <button type="button" onClick={() => { setSearch(''); setBudget(''); }}>Clear search</button>}</div>}</section>
 
-				<section className="hostels-areas" aria-labelledby="areas-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Know your neighbourhood</p><h2 id="areas-title">Popular student areas</h2></div><a href="/hostels">Explore all areas <FiArrowUpRight aria-hidden="true" /></a></div><div className="hostels-area-grid">{popularAreas.map((area) => <a className={`hostels-area-card ${area.tone}`} href={`/search-results?location=${encodeURIComponent(area.name)}`} key={area.name}><span>{area.name}</span><small>{area.detail}</small><FiArrowUpRight aria-hidden="true" /></a>)}</div></section>
+				{cities.length > 0 && <section className="hostels-areas" aria-labelledby="areas-title"><div className="hostels-section-heading"><div><p className="hostels-kicker">Explore locations</p><h2 id="areas-title">Cities with available stays</h2></div></div><div className="hostels-area-grid">{cities.map((city) => <a className="hostels-area-card" href={`/search-results?location=${encodeURIComponent(city)}`} key={city}><span>{city}</span><small>Browse approved listings</small><FiArrowUpRight aria-hidden="true" /></a>)}</div></section>}
 
-				<section className="hostels-trust"><div><p className="hostels-kicker">A little less uncertainty</p><h2>Every listing is checked for the details that matter.</h2></div><div className="hostels-trust-points"><span><strong>01</strong>Verified properties</span><span><strong>02</strong>Transparent pricing</span><span><strong>03</strong>Student reviews</span></div></section>
+				<section className="hostels-trust"><div><p className="hostels-kicker">A little less uncertainty</p><h2>Find a place that fits your next chapter.</h2></div><div className="hostels-trust-points"><span><strong>01</strong>Published by property owners</span><span><strong>02</strong>Clear monthly rent</span><span><strong>03</strong>Approved listings</span></div></section>
 			</main>
 			<Footer />
 		</>

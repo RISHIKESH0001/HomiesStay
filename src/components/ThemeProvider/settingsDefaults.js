@@ -10,8 +10,6 @@ export const defaultSettings = {
 	hoverSurface: '#edf4d8',
 	density: 'comfortable',
 	animations: true,
-	emailNotifications: true,
-	listingAlerts: true,
 };
 
 export const getSettingsKey = (user) => {

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminProfile from '../../components/Profiles/AdminProfile';
 import OwnerProfile from '../../components/Profiles/OwnerProfile';
 import StudentProfile from '../../components/Profiles/StudentProfile';
-import { logout } from '../../redux/authSlice';
+import { logoutUser } from '../../redux/authSlice';
 
 const roleConfig = {
 	student: { label: 'Student account', title: 'My profile', back: '/dashboard' },
@@ -19,9 +19,13 @@ const Profile = () => {
 	const role = user?.role || 'student';
 	const config = roleConfig[role] || roleConfig.student;
 
-	const handleLogout = () => {
-		dispatch(logout());
-		navigate('/');
+	const handleLogout = async () => {
+		try {
+			await dispatch(logoutUser()).unwrap();
+			navigate('/', { replace: true });
+		} catch {
+			window.alert('Unable to sign out. Check your connection and try again.');
+		}
 	};
 
 	return (

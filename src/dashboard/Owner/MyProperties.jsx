@@ -1,202 +1,195 @@
-import { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { FiArrowUpRight, FiBarChart2, FiCheck, FiChevronRight, FiClipboard, FiHome, FiMapPin, FiMessageCircle, FiPlus, FiSearch, FiX } from 'react-icons/fi';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FiArrowUpRight, FiBarChart2, FiCheck, FiChevronRight, FiHome, FiMapPin, FiPlus, FiSearch, FiSend, FiUsers, FiX } from 'react-icons/fi';
 import DashboardLayout from '../../layouts/DashboardLayout';
-import { getOwnerProperties, getPropertySlug, saveStoredProperty, seededOwnerProperties, updateStoredProperty } from '../../services/propertyStorage';
-import { getListingPaymentPath } from '../../services/listingWorkflow';
+import { createOwnerProperty, getApiErrorMessage, getOwnerProperties, submitOwnerPropertyForReview, updateOwnerProperty } from '../../services/api';
+import { toOwnerProperty } from '../../services/propertyStorage';
 import '../workspacePayments.css';
 
 const ownerNavigation = [
 	{ label: 'Overview', icon: FiBarChart2 },
-	{ label: 'My properties', icon: FiHome, count: '3' },
-	{ label: 'Enquiries', icon: FiMessageCircle, count: '8' },
-	{ label: 'Applications', icon: FiClipboard, count: '5' },
+	{ label: 'My properties', icon: FiHome },
 ];
 
 const emptyForm = {
 	name: '',
-	type: 'Private rooms and co-living',
-	gender: 'Unisex',
-	area: '',
-	city: 'Bengaluru',
-	college: '',
-	distance: '',
+	propertyType: '',
+	genderPolicy: 'UNISEX',
 	description: '',
-	rooms: '',
-	rent: '',
-	amenities: 'Wi-Fi, Housekeeping, Power backup',
-	ownerName: 'Riya Shah',
-	ownerPhone: '',
-	ownerEmail: '',
-	photos: [],
+	addressLine: '',
+	area: '',
+	city: '',
+	state: '',
+	postalCode: '',
+	nearbyInstitution: '',
+	distanceKm: '',
+	monthlyRent: '',
+	capacity: '',
+	availableBeds: '',
+	images: '',
+	amenities: '',
 };
 
-const getFormFromProperty = (property = {}) => ({
-	name: property.name || '',
-	type: property.type || emptyForm.type,
-	gender: property.gender || emptyForm.gender,
-	area: property.area || '',
-	city: property.city || emptyForm.city,
-	college: property.college || '',
-	distance: property.distance || '',
-	description: property.description || '',
-	rooms: property.capacity ? String(property.capacity) : (property.rooms ? String((property.rooms.match(/\d+/g) || [])[1] || (property.rooms.match(/\d+/g) || [0])[0] || '') : ''),
-	rent: property.rent ? String(property.rent) : '',
-	amenities: Array.isArray(property.amenities) ? property.amenities.join(', ') : (property.amenities || emptyForm.amenities),
-	ownerName: property.owner?.name || emptyForm.ownerName,
-	ownerPhone: property.owner?.phone || '',
-	ownerEmail: property.owner?.email || '',
-	photos: property.photos?.length ? property.photos : (property.image ? [property.image] : []),
-});
+const getFormFromProperty = (property) => Object.fromEntries(
+	Object.keys(emptyForm).map((key) => [key, key === 'images' ? (property.images || []).join('\n') : key === 'amenities' ? (property.amenities || []).join('\n') : property[key] == null ? '' : String(property[key])]),
+);
 
 const MyProperties = () => {
-	const signedInUser = useSelector((state) => state.auth.user);
-	const ownerId = signedInUser?.id || signedInUser?.email || signedInUser?.username || 'owner-1';
-	const navigate = useNavigate();
-	const location = useLocation();
-	const [properties, setProperties] = useState(() => getOwnerProperties().filter((property) => seededOwnerProperties.some((seeded) => seeded.slug === property.slug) || !property.ownerId || property.ownerId === ownerId));
-	const requestedEditSlug = new URLSearchParams(location.search).get('edit');
-	const requestedEditProperty = properties.find((property) => (property.slug || getPropertySlug(property.name)) === requestedEditSlug);
+	const [properties, setProperties] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [loadError, setLoadError] = useState('');
 	const [query, setQuery] = useState('');
 	const [statusFilter, setStatusFilter] = useState('All statuses');
-	const [isAddOpen, setIsAddOpen] = useState(Boolean(requestedEditProperty));
-	const [editingSlug, setEditingSlug] = useState(requestedEditProperty?.slug || requestedEditSlug || null);
-	const [form, setForm] = useState(() => requestedEditProperty ? getFormFromProperty(requestedEditProperty) : emptyForm);
+	const [isFormOpen, setIsFormOpen] = useState(false);
+	const [editingId, setEditingId] = useState(null);
+	const [form, setForm] = useState(emptyForm);
 	const [formError, setFormError] = useState('');
-	const [savedMessage, setSavedMessage] = useState('');
+	const [formMessage, setFormMessage] = useState('');
+	const [isSaving, setIsSaving] = useState(false);
+	const [submittingId, setSubmittingId] = useState(null);
+
+	const refreshProperties = useCallback(async () => {
+		setLoadError('');
+		try {
+			const page = await getOwnerProperties({ page: 0, size: 50 });
+			const ownProperties = page.content.map(toOwnerProperty);
+			setProperties(ownProperties);
+			return ownProperties;
+		} catch (error) {
+			setLoadError(getApiErrorMessage(error, 'Unable to load your properties. Please try again.'));
+			return [];
+		} finally {
+			setIsLoading(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		let isCurrent = true;
+		getOwnerProperties({ page: 0, size: 50 })
+			.then((page) => { if (isCurrent) setProperties(page.content.map(toOwnerProperty)); })
+			.catch((error) => { if (isCurrent) setLoadError(getApiErrorMessage(error, 'Unable to load your properties. Please try again.')); })
+			.finally(() => { if (isCurrent) setIsLoading(false); });
+		return () => { isCurrent = false; };
+	}, []);
 
 	const visibleProperties = useMemo(() => {
 		const normalizedQuery = query.trim().toLowerCase();
 		return properties.filter((property) => {
-			const matchesQuery = !normalizedQuery || [property.name, property.area, property.city].some((value) => value.toLowerCase().includes(normalizedQuery));
-			const matchesStatus = statusFilter === 'All statuses' || property.status === statusFilter;
-			return matchesQuery && matchesStatus;
+			const matchesQuery = !normalizedQuery || `${property.name} ${property.area} ${property.city}`.toLowerCase().includes(normalizedQuery);
+			return matchesQuery && (statusFilter === 'All statuses' || property.status === statusFilter);
 		});
 	}, [properties, query, statusFilter]);
 
 	const handleFormChange = (event) => {
-		setForm((currentForm) => ({ ...currentForm, [event.target.name]: event.target.value }));
+		setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
 		setFormError('');
 	};
 
-	const handlePhotoChange = (event) => {
-		const files = Array.from(event.target.files || []).slice(0, 6);
-		Promise.all(files.map((file) => new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.onload = () => resolve(reader.result);
-			reader.onerror = reject;
-			reader.readAsDataURL(file);
-		}))).then((photos) => setForm((currentForm) => ({ ...currentForm, photos }))).catch(() => setFormError('We could not read one of those photos. Please try again.'));
-		setFormError('');
-	};
-
-	const closePropertyForm = () => {
-		setIsAddOpen(false);
-		setEditingSlug(null);
+	const closeForm = () => {
+		setIsFormOpen(false);
+		setEditingId(null);
 		setForm(emptyForm);
 		setFormError('');
-		if (location.search.includes('edit=')) {
-			navigate('/owner/properties', { replace: true });
-		}
 	};
 
-	const openEditProperty = (property) => {
-		setEditingSlug(property.slug || getPropertySlug(property.name));
+	const openEditForm = (property) => {
+		setEditingId(property.id);
 		setForm(getFormFromProperty(property));
 		setFormError('');
-		setIsAddOpen(true);
+		setIsFormOpen(true);
 	};
 
-	const handleSaveProperty = (event) => {
+	const handleSaveProperty = async (event) => {
 		event.preventDefault();
-		if (!form.name.trim() || !form.area.trim() || !form.city.trim() || !form.college.trim() || !form.distance.trim() || !form.description.trim() || !form.rooms.trim() || !form.rent.trim() || !form.ownerName.trim() || !form.ownerPhone.trim() || !form.ownerEmail.trim() || !form.photos.length || !form.amenities.trim()) {
-			setFormError('Complete the required listing, location, contact, amenity, and photo details before publishing.');
-			return;
-		}
-		if (!Number.isInteger(Number(form.rooms)) || Number(form.rooms) <= 0 || !Number.isFinite(Number(form.rent)) || Number(form.rent) <= 0) {
-			setFormError('Enter a valid positive room count and monthly rent.');
+		const capacity = Number(form.capacity);
+		const availableBeds = Number(form.availableBeds);
+		const monthlyRent = Number(form.monthlyRent);
+		if (!Number.isInteger(capacity) || capacity < 1 || !Number.isInteger(availableBeds) || availableBeds < 0 || availableBeds > capacity || !Number.isFinite(monthlyRent) || monthlyRent <= 0) {
+			setFormError('Enter a positive capacity and rent, and available beds between zero and capacity.');
 			return;
 		}
 
-		const nextValue = {
-			ownerId,
-			slug: getPropertySlug(form.name),
+		const propertyRequest = {
 			name: form.name.trim(),
-			type: form.type,
-			gender: form.gender,
+			propertyType: form.propertyType.trim(),
+			genderPolicy: form.genderPolicy,
+			description: form.description.trim() || null,
+			addressLine: form.addressLine.trim() || null,
 			area: form.area.trim(),
-			city: form.city,
-			college: form.college.trim(),
-			distance: form.distance.trim(),
-			commute: `${form.distance.trim()} to ${form.college.trim()}`,
-			description: form.description.trim(),
-			occupancy: 0,
-			rooms: `0 / ${form.rooms.trim()}`,
-			capacity: Number(form.rooms),
-			status: 'Pending review',
-			adminDecision: 'pending',
-			adminNote: '',
-			listingFeeStatus: 'unpaid',
-			tone: 'new',
-			image: form.photos[0],
-			photos: form.photos,
-			rent: Number(form.rent),
-			rating: 'New',
-			reviews: '0',
-			amenities: form.amenities.split(',').map((amenity) => amenity.trim()).filter(Boolean),
-			owner: { name: form.ownerName.trim(), phone: form.ownerPhone.trim(), email: form.ownerEmail.trim() },
+			city: form.city.trim(),
+			state: form.state.trim() || null,
+			postalCode: form.postalCode.trim() || null,
+			latitude: null,
+			longitude: null,
+			nearbyInstitution: form.nearbyInstitution.trim() || null,
+			distanceKm: form.distanceKm === '' ? null : Number(form.distanceKm),
+			monthlyRent,
+			capacity,
+			availableBeds,
+			images: form.images.split(/\r?\n/).map((value) => value.trim()).filter(Boolean),
+			amenities: form.amenities.split(/\r?\n/).map((value) => value.trim()).filter(Boolean),
 		};
 
-		if (editingSlug) {
-			const updatedProperties = updateStoredProperty(editingSlug, nextValue);
-			setProperties(updatedProperties.filter((property) => seededOwnerProperties.some((seeded) => seeded.slug === property.slug) || !property.ownerId || property.ownerId === ownerId));
-			setSavedMessage('Property submitted for admin review. It will stay private until it is approved and the listing fee is paid.');
-		} else {
-			saveStoredProperty(nextValue);
-			setProperties((currentProperties) => [...currentProperties, nextValue]);
-			setSavedMessage('Property submitted for admin review. It will stay private until it is approved and the listing fee is paid.');
-		}
-
-		setForm(emptyForm);
+		setIsSaving(true);
 		setFormError('');
-		setEditingSlug(null);
-		setIsAddOpen(false);
+		try {
+			if (editingId) await updateOwnerProperty(editingId, propertyRequest);
+			else await createOwnerProperty(propertyRequest);
+			await refreshProperties();
+			setFormMessage(editingId ? 'Property draft updated.' : 'Property draft saved to the database.');
+			closeForm();
+		} catch (error) {
+			setFormError(getApiErrorMessage(error, 'Unable to save this property. Please review the details and try again.'));
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
+	const handleSubmitForReview = async (property) => {
+		setSubmittingId(property.id);
+		setLoadError('');
+		try {
+			await submitOwnerPropertyForReview(property.id);
+			await refreshProperties();
+			setFormMessage(`${property.name} was submitted for review.`);
+		} catch (error) {
+			setLoadError(getApiErrorMessage(error, 'Unable to submit this property for review. Please try again.'));
+		} finally {
+			setSubmittingId(null);
+		}
+	};
+
+	const statuses = [...new Set(properties.map((property) => property.status))];
+	const occupancy = properties.reduce((summary, property) => ({
+		capacity: summary.capacity + Number(property.capacity || 0),
+		occupied: summary.occupied + Number(property.capacity || 0) - Number(property.availableBeds || 0),
+	}), { capacity: 0, occupied: 0 });
+
 	return (
-		<DashboardLayout role="owner" profile={{ initials: 'RS', name: 'Riya Shah', type: 'Property owner' }} navigation={ownerNavigation} pageTitle="My properties">
+		<DashboardLayout role="owner" navigation={ownerNavigation} pageTitle="My properties">
 			<main className="dashboard-content owner-properties-page">
-				<section className="dashboard-welcome owner-properties-welcome">
-					<div><p className="dashboard-eyebrow">Your portfolio</p><h1>Properties that <span>feel like home.</span></h1><p className="dashboard-subtitle">Keep every listing, room count, and area detail in one calm workspace.</p></div>
-					<button className="dashboard-primary-action" type="button" onClick={() => setIsAddOpen(true)}><FiPlus /> Add a property <FiArrowUpRight /></button>
-				</section>
-
-				<section className="owner-properties-toolbar" aria-label="Find a property">
-					<div className="owner-properties-search"><FiSearch aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by property, area, or city" aria-label="Search properties by area" /></div>
-					<select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="Filter properties by status"><option>All statuses</option><option>Live</option><option>Pending review</option><option>Approved - payment due</option><option>Changes requested</option><option>Review</option><option>Draft</option></select>
-					<span className="owner-properties-result-count">{visibleProperties.length} of {properties.length} properties</span>
-				</section>
-
-				{savedMessage && <div className="owner-properties-success" role="status"><FiCheck /> {savedMessage}<button type="button" onClick={() => setSavedMessage('')} aria-label="Dismiss message"><FiX /></button></div>}
-
-				<section className="owner-properties-summary" aria-label="Portfolio summary">
-					<div><span>Live properties</span><strong>{properties.filter((property) => property.status === 'Live').length}</strong></div>
-					<div><span>Total rooms</span><strong>{properties.reduce((total, property) => total + Number(property.rooms.split('/')[1]), 0)}</strong></div>
-					<div><span>Average occupancy</span><strong>{Math.round(properties.reduce((total, property) => total + property.occupancy, 0) / properties.length)}%</strong></div>
-					<div><span>Areas covered</span><strong>{new Set(properties.map((property) => property.area)).size}</strong></div>
-				</section>
-
-				<div className="dashboard-section-heading owner-properties-heading"><div><p className="dashboard-eyebrow">All your spaces</p><h2>Manage properties</h2></div><span>{query ? `Showing results for “${query}”` : 'Updated a few minutes ago'}</span></div>
-				{visibleProperties.length ? <section className="owner-properties-grid">{visibleProperties.map((property) => <article className="owner-property-card" key={`${property.name}-${property.area}`}>
-					<div className={`owner-property-card-image ${property.tone}`} style={{ backgroundImage: `url(${property.image})` }}><span className={`status-pill ${property.status === 'Live' ? 'live' : 'review'}`}>{property.status}</span><button type="button" aria-label={`Open ${property.name}`} onClick={() => navigate(`/hostels/${getPropertySlug(property.name)}`)}><FiArrowUpRight /></button></div>
-					<div className="owner-property-card-body"><div className="owner-property-card-title"><div><h3>{property.name}</h3><p><FiMapPin /> {property.area}, {property.city}</p></div><span className="owner-property-card-menu"><FiChevronRight /></span></div><div className="owner-property-card-metrics"><span><strong>{property.occupancy}%</strong><small>occupied</small></span><span><strong>{property.rooms}</strong><small>rooms filled</small></span><span><strong>{typeof property.rent === 'number' ? `₹${property.rent.toLocaleString('en-IN')}` : property.rent}</strong><small>from / month</small></span></div>{property.adminNote && property.status === 'Changes requested' && <p className="owner-property-review-note">Admin note: {property.adminNote}</p>}<div className="owner-property-card-actions">{property.status === 'Approved - payment due' ? <><a className="owner-property-card-link owner-property-card-publish" href={getListingPaymentPath(property)}>Pay listing fee <FiArrowUpRight /></a><button type="button" className="owner-property-card-link owner-property-card-edit" onClick={() => openEditProperty(property)}>Edit <FiChevronRight /></button></> : property.status === 'Pending review' ? <><span className="owner-property-review-note">Awaiting admin review</span><button type="button" className="owner-property-card-link owner-property-card-edit" onClick={() => openEditProperty(property)}>Edit submission <FiChevronRight /></button></> : property.status === 'Changes requested' || property.status === 'Draft' ? <><button type="button" className="owner-property-card-link owner-property-card-publish" onClick={() => openEditProperty(property)}>Update and resubmit <FiArrowUpRight /></button></> : <><a className="owner-property-card-link" href={`/hostels/${getPropertySlug(property.name)}`}>View property <FiArrowUpRight /></a><button type="button" className="owner-property-card-link owner-property-card-edit" onClick={() => openEditProperty(property)}>Edit <FiChevronRight /></button></>}</div></div>
-				</article>)}</section> : <div className="owner-properties-empty"><FiSearch /><h3>No properties found</h3><p>Try another property name, area, or city.</p><button type="button" onClick={() => { setQuery(''); setStatusFilter('All statuses'); }}>Clear filters</button></div>}
-
-				<section className="owner-add-property-prompt"><div><p className="dashboard-eyebrow">Growing your portfolio?</p><h2>Bring your next space to life.</h2><p>New listings are reviewed by an admin, then published after the one-time fee is paid.</p></div><button type="button" onClick={() => setIsAddOpen(true)}><FiPlus /> Add property</button></section>
+				<section className="dashboard-welcome owner-properties-welcome"><div><p className="dashboard-eyebrow">Your database listings</p><h1>Manage your <span>properties.</span></h1><p className="dashboard-subtitle">Listings shown here are loaded from your signed-in owner account.</p></div><button className="dashboard-primary-action" type="button" onClick={() => { setForm(emptyForm); setEditingId(null); setIsFormOpen(true); }}><FiPlus /> Add a property <FiArrowUpRight /></button></section>
+				<section className="owner-properties-toolbar" aria-label="Find a property"><div className="owner-properties-search"><FiSearch aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by property, area, or city" aria-label="Search properties by area" /></div><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="Filter properties by status"><option>All statuses</option>{statuses.map((status) => <option key={status}>{status}</option>)}</select><span className="owner-properties-result-count">{visibleProperties.length} of {properties.length} properties</span></section>
+				{formMessage && <div className="owner-properties-success" role="status"><FiCheck /> {formMessage}<button type="button" onClick={() => setFormMessage('')} aria-label="Dismiss message"><FiX /></button></div>}
+				{loadError && <p className="field-error" role="alert">{loadError}</p>}
+				<section className="owner-properties-summary" aria-label="Portfolio summary"><div><span>Listings</span><strong>{properties.length}</strong></div><div><span>Live listings</span><strong>{properties.filter((property) => property.listingStatus === 'LIVE').length}</strong></div><div><span>Room capacity</span><strong>{occupancy.capacity}</strong></div><div><span>Occupied beds</span><strong>{occupancy.occupied}</strong></div></section>
+				<div className="dashboard-section-heading owner-properties-heading"><div><p className="dashboard-eyebrow">Your records</p><h2>Properties</h2></div></div>
+				{isLoading ? <p role="status">Loading your properties…</p> : visibleProperties.length ? <section className="owner-properties-grid">{visibleProperties.map((property) => <article className="owner-property-card" key={property.id}>
+					<div className="owner-property-card-image">{property.images?.[0] && <img src={property.images[0]} alt={property.name} referrerPolicy="no-referrer" />}<span className={`status-pill ${property.listingStatus === 'LIVE' ? 'live' : 'review'}`}>{property.status}</span></div>
+					<div className="owner-property-card-body">
+						<div className="owner-property-card-title"><div><h3>{property.name}</h3><p><FiMapPin /> {property.area}, {property.city}</p></div><button type="button" className="owner-property-card-menu" onClick={() => openEditForm(property)} aria-label={`Edit ${property.name}`} title="Edit listing"><FiChevronRight /></button></div>
+						<div className="owner-property-card-metrics"><span><strong>{property.capacity}</strong><small>total beds</small></span><span><strong>{property.availableBeds}</strong><small>available beds</small></span><span><strong>₹{property.rent.toLocaleString('en-IN')}</strong><small>monthly rent</small></span></div>
+						{property.reviewNote && <p className="owner-property-review-note"><strong>Admin feedback:</strong> {property.reviewNote}</p>}
+						<div className="owner-property-card-actions"><button type="button" className="owner-property-card-link owner-property-card-edit" onClick={() => openEditForm(property)}>Edit listing <FiChevronRight /></button>{property.listingStatus === 'DRAFT' && <button type="button" className="owner-property-card-link owner-property-submit" disabled={submittingId === property.id} onClick={() => handleSubmitForReview(property)}><FiSend /> {submittingId === property.id ? 'Submitting…' : property.reviewStatus === 'CHANGES_REQUESTED' ? 'Resubmit for review' : 'Submit for review'}</button>}<Link className="owner-property-card-link" to={`/owner/property-students/${property.id}`}><FiUsers /> Students & rent</Link>{property.listingStatus === 'LIVE' && <a className="owner-property-card-link" href={`/hostels/${property.slug}`}>View listing <FiArrowUpRight /></a>}</div>
+					</div>
+				</article>)}</section> : <div className="owner-properties-empty"><FiSearch /><h3>{properties.length ? 'No properties match these filters.' : 'No properties yet.'}</h3><p>{properties.length ? 'Change your search or status filter.' : 'Add your first property to save it to your account in the database.'}</p>{properties.length > 0 && <button type="button" onClick={() => { setQuery(''); setStatusFilter('All statuses'); }}>Clear filters</button>}</div>}
 			</main>
-
-			{isAddOpen && <div className="owner-property-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closePropertyForm(); }}><section className="owner-property-modal owner-property-form-modal" role="dialog" aria-modal="true" aria-labelledby="add-property-title"><div className="owner-property-modal-heading"><div><p className="dashboard-eyebrow">{editingSlug ? 'Edit listing' : 'New listing'}</p><h2 id="add-property-title">{editingSlug ? 'Update a property' : 'Submit a property'}</h2><p>Complete the listing so admins can review it before it becomes public.</p></div><button type="button" onClick={closePropertyForm} aria-label="Close add property form"><FiX /></button></div><form onSubmit={handleSaveProperty}><div className="owner-form-section"><p className="owner-form-section-title">Property basics</p><div className="owner-property-form-grid"><label className="owner-form-field-wide"><span>Property name *</span><input name="name" value={form.name} onChange={handleFormChange} placeholder="e.g. The Green Courtyard" /></label><label><span>Stay type *</span><select name="type" value={form.type} onChange={handleFormChange}><option>Private rooms and co-living</option><option>Shared rooms and co-living</option><option>Student hostel</option><option>Premium co-living</option><option>Shared apartments</option></select></label><label><span>Gender preference *</span><select name="gender" value={form.gender} onChange={handleFormChange}><option>Unisex</option><option>Female</option><option>Male</option></select></label></div></div><div className="owner-form-section"><p className="owner-form-section-title">Location and commute</p><div className="owner-property-form-grid"><label><span>Area / neighbourhood *</span><input name="area" value={form.area} onChange={handleFormChange} placeholder="e.g. Bellandur" /></label><label><span>City *</span><select name="city" value={form.city} onChange={handleFormChange}><option>Bengaluru</option><option>Hyderabad</option><option>Pune</option><option>Kolkata</option></select></label><label><span>Nearby college *</span><input name="college" value={form.college} onChange={handleFormChange} placeholder="e.g. Christ University" /></label><label><span>Distance / commute *</span><input name="distance" value={form.distance} onChange={handleFormChange} placeholder="e.g. 12 min by bus" /></label></div></div><div className="owner-form-section"><p className="owner-form-section-title">Pricing and stay details</p><div className="owner-property-form-grid"><label><span>Total rooms *</span><input name="rooms" value={form.rooms} onChange={handleFormChange} inputMode="numeric" placeholder="30" /></label><label><span>Starting rent / month *</span><input name="rent" value={form.rent} onChange={handleFormChange} inputMode="numeric" placeholder="9500" /></label><label className="owner-form-field-wide"><span>What students should know *</span><textarea name="description" value={form.description} onChange={handleFormChange} rows="3" placeholder="Describe the atmosphere, room setup, and what makes this stay a good fit." /></label><label className="owner-form-field-wide"><span>Amenities *</span><input name="amenities" value={form.amenities} onChange={handleFormChange} placeholder="Wi-Fi, Laundry, Study lounge, Power backup" /><small>Separate amenities with commas.</small></label></div></div><div className="owner-form-section"><p className="owner-form-section-title">Photos and owner contact</p><div className="owner-property-form-grid"><label className="owner-form-field-wide"><span>Property photos * (up to 6)</span><input name="photos" type="file" accept="image/*" multiple onChange={handlePhotoChange} /><small>{form.photos.length ? `${form.photos.length} photo${form.photos.length > 1 ? 's' : ''} selected` : 'Add clear room, common area, and exterior photos.'}</small></label><label><span>Contact person *</span><input name="ownerName" value={form.ownerName} onChange={handleFormChange} placeholder="Owner or manager name" /></label><label><span>Phone number *</span><input name="ownerPhone" value={form.ownerPhone} onChange={handleFormChange} inputMode="tel" placeholder="+91 98765 43210" /></label><label className="owner-form-field-wide"><span>Email address *</span><input name="ownerEmail" value={form.ownerEmail} onChange={handleFormChange} type="email" placeholder="owner@example.com" /></label></div></div>{formError && <p className="owner-property-form-error" role="alert">{formError}</p>}<div className="owner-property-form-actions"><button type="button" onClick={closePropertyForm}>Cancel</button><button type="submit"><FiPlus /> {editingSlug ? 'Save and resubmit' : 'Submit for review'}</button></div></form></section></div>}
+			{isFormOpen && <div className="owner-property-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeForm(); }}><section className="owner-property-modal owner-property-form-modal" role="dialog" aria-modal="true" aria-labelledby="add-property-title"><div className="owner-property-modal-heading"><div><p className="dashboard-eyebrow">Database listing</p><h2 id="add-property-title">{editingId ? 'Update property' : 'Add property'}</h2><p>Photos and amenities are saved with this listing. Payments are not connected.</p></div><button type="button" onClick={closeForm} aria-label="Close property form"><FiX /></button></div><form onSubmit={handleSaveProperty}>
+				<div className="owner-form-section"><p className="owner-form-section-title">Property details</p><div className="owner-property-form-grid"><label className="owner-form-field-wide"><span>Property name *</span><input name="name" value={form.name} onChange={handleFormChange} maxLength="160" required /></label><label><span>Property type *</span><input name="propertyType" value={form.propertyType} onChange={handleFormChange} maxLength="60" required /></label><label><span>Gender policy *</span><select name="genderPolicy" value={form.genderPolicy} onChange={handleFormChange}><option value="UNISEX">Unisex</option><option value="WOMEN">Women</option><option value="MEN">Men</option></select></label><label className="owner-form-field-wide"><span>Description</span><textarea name="description" value={form.description} onChange={handleFormChange} rows="3" maxLength="10000" /></label></div></div>
+				<div className="owner-form-section"><p className="owner-form-section-title">Location</p><div className="owner-property-form-grid"><label><span>Address</span><input name="addressLine" value={form.addressLine} onChange={handleFormChange} maxLength="255" /></label><label><span>Area *</span><input name="area" value={form.area} onChange={handleFormChange} maxLength="120" required /></label><label><span>City *</span><input name="city" value={form.city} onChange={handleFormChange} maxLength="120" required /></label><label><span>State</span><input name="state" value={form.state} onChange={handleFormChange} maxLength="120" /></label><label><span>Postal code</span><input name="postalCode" value={form.postalCode} onChange={handleFormChange} maxLength="20" /></label><label><span>Nearby institution</span><input name="nearbyInstitution" value={form.nearbyInstitution} onChange={handleFormChange} maxLength="180" /></label><label><span>Distance to institution (km)</span><input name="distanceKm" type="number" min="0" max="99999" step="0.01" value={form.distanceKm} onChange={handleFormChange} /></label></div></div>
+				<div className="owner-form-section"><p className="owner-form-section-title">Capacity and rent</p><div className="owner-property-form-grid"><label><span>Total beds *</span><input name="capacity" type="number" min="1" step="1" value={form.capacity} onChange={handleFormChange} required /></label><label><span>Available beds *</span><input name="availableBeds" type="number" min="0" step="1" value={form.availableBeds} onChange={handleFormChange} required /></label><label><span>Monthly rent (INR) *</span><input name="monthlyRent" type="number" min="0.01" step="0.01" value={form.monthlyRent} onChange={handleFormChange} required /></label></div></div>
+				<div className="owner-form-section"><p className="owner-form-section-title">Photos and amenities</p><div className="owner-property-form-grid"><label className="owner-form-field-wide"><span>Photo URLs (one HTTPS URL per line, up to 10)</span><textarea name="images" value={form.images} onChange={handleFormChange} rows="4" maxLength="20480" placeholder="https://your-image-host.example/property-1.jpg" /></label><label className="owner-form-field-wide"><span>Amenities (one per line, up to 30)</span><textarea name="amenities" value={form.amenities} onChange={handleFormChange} rows="4" maxLength="2500" placeholder={'Wi-Fi\nLaundry\nStudy area'} /></label></div></div>
+				{formError && <p className="owner-property-form-error" role="alert">{formError}</p>}<div className="owner-property-form-actions"><button type="button" onClick={closeForm}>Cancel</button><button type="submit" disabled={isSaving}><FiPlus /> {isSaving ? 'Saving…' : editingId ? 'Save changes' : 'Save draft'}</button></div></form></section></div>}
 		</DashboardLayout>
 	);
 };

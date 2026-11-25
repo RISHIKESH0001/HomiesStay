@@ -8,8 +8,8 @@ const Hero = () => {
 				<p className="hero-kicker">Your next chapter starts here</p>
 				<h1 id="hero-title">Find The Perfect Hostel Near Your College</h1>
 				<p className="hero-description">
-					Book verified hostels, compare amenities, and find a comfortable place
-					to call home before your semester begins.
+					Browse currently approved listings and compare the details provided by
+					property owners.
 				</p>
 				<div className="hero-actions">
 					<Button className="hero-button" href="/hostels" variant="primary">
@@ -29,25 +29,11 @@ const Hero = () => {
 					/>
 					<div className="hero-image-label">
 						<span className="status-dot" aria-hidden="true" />
-						Verified stays only
+						Illustrative room photo
 					</div>
 				</div>
 			</div>
 
-			<div className="hero-stats" aria-label="Homies Stay statistics">
-				<div className="hero-stat">
-					<strong>500+</strong>
-					<span>Hostels</span>
-				</div>
-				<div className="hero-stat">
-					<strong>100+</strong>
-					<span>Colleges</span>
-				</div>
-				<div className="hero-stat">
-					<strong>5000+</strong>
-					<span>Students</span>
-				</div>
-			</div>
 		</section>
 	);
 };

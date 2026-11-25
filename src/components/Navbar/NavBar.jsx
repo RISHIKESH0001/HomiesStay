@@ -1,16 +1,20 @@
 import { FiGrid, FiLogOut } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../redux/authSlice';
+import { logoutUser } from '../../redux/authSlice';
 
 const NavBar = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-	const handleLogout = () => {
-		dispatch(logout());
-		navigate('/');
+	const handleLogout = async () => {
+		try {
+			await dispatch(logoutUser()).unwrap();
+			navigate('/', { replace: true });
+		} catch {
+			window.alert('Unable to sign out. Check your connection and try again.');
+		}
 	};
 
 	return (

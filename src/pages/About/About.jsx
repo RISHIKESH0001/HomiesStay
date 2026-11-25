@@ -8,8 +8,8 @@ const roleContent = {
 	students: {
 		label: 'For students',
 		title: 'A calmer way to find your first home away from home.',
-		text: 'Search by college, neighbourhood, landmark, or budget. Compare verified options, understand the area, and move forward with a little more confidence.',
-		points: ['Discover stays close to your campus', 'Compare rent, ratings, and location', 'Save options and send enquiries'],
+		text: 'Browse published property details and compare rent, location, and the information owners provide.',
+		points: ['Browse currently published stays', 'Compare rent and location', 'View the details supplied by owners'],
 		link: '/hostels',
 		linkText: 'Explore hostels',
 		icon: FiSearch,
@@ -17,8 +17,8 @@ const roleContent = {
 	owners: {
 		label: 'For property owners',
 		title: 'A clearer way to fill rooms with the right residents.',
-		text: 'Bring your property to students who are actively looking. Manage listings, follow enquiries, and understand how your spaces are performing from one place.',
-		points: ['Showcase your property with confidence', 'Manage enquiries and applications', 'Track occupancy and property health'],
+		text: 'Create and manage property records. Reply to student enquiries and review submitted applications from your workspace.',
+		points: ['Create property records', 'Update or remove your own listings', 'See the current listing status'],
 		link: '/register',
 		linkText: 'List your property',
 		icon: FiHome,
@@ -26,8 +26,8 @@ const roleContent = {
 	admins: {
 		label: 'For platform teams',
 		title: 'A trusted foundation for a growing accommodation community.',
-		text: 'Review new properties, keep the marketplace healthy, and make sure the experience stays useful for the people who rely on it.',
-		points: ['Review and approve listings', 'Monitor trust and platform activity', 'Keep students and owners moving'],
+		text: 'Administrative reporting, moderation, and user-directory endpoints are not connected yet.',
+		points: ['Administrative dashboards are pending', 'Moderation APIs are pending', 'Platform reports are pending'],
 		link: '/contact',
 		linkText: 'Talk to our team',
 		icon: FiShield,
@@ -36,8 +36,8 @@ const roleContent = {
 
 const processSteps = [
 	{ number: '01', icon: FiSearch, title: 'Tell us what matters', text: 'Start with a college, neighbourhood, budget, or the kind of room you want.' },
-	{ number: '02', icon: FiMapPin, title: 'Explore with context', text: 'Browse verified stays near the places that shape your everyday routine.' },
-	{ number: '03', icon: FiUsers, title: 'Make your move', text: 'Save your shortlist, ask questions, and choose a stay that feels right.' },
+	{ number: '02', icon: FiMapPin, title: 'Explore with context', text: 'Browse approved stays near the places that shape your everyday routine.' },
+	{ number: '03', icon: FiUsers, title: 'Compare available details', text: 'Review the property information that owners have supplied.' },
 ];
 
 const About = () => {
@@ -51,10 +51,10 @@ const About = () => {
 			<main className="about-page">
 				<section className="about-hero">
 					<div className="about-hero-copy"><p className="about-kicker">About Homies Stay</p><h1>Room for the life you are <em>building.</em></h1><p>Homies Stay is a student accommodation marketplace built to make finding, listing, and managing a stay feel more human.</p><div className="about-hero-actions"><a className="about-primary-link" href="/hostels">Find your stay <FiArrowUpRight aria-hidden="true" /></a><a className="about-text-link" href="#how-it-works">See how it works <FiArrowUpRight aria-hidden="true" /></a></div></div>
-					<div className="about-hero-visual"><img src={heroAbout} alt="Bright shared bedroom with comfortable study space" /><div className="about-image-note"><span className="about-image-dot" aria-hidden="true" /><span><strong>Built around real routines</strong><small>Campus, commute, comfort</small></span></div></div>
+					<div className="about-hero-visual"><img src={heroAbout} alt="Illustrative shared bedroom with study space" /><div className="about-image-note"><span className="about-image-dot" aria-hidden="true" /><span><strong>Illustrative room photo</strong><small>Not a property listing</small></span></div></div>
 				</section>
 
-				<section className="about-intro"><p className="about-kicker">Why we exist</p><div className="about-intro-grid"><h2>Finding a room should not feel like finding your way through a maze.</h2><div><p>Moving for college or work is a big enough change. The search for a safe, affordable place to live should bring clarity, not more uncertainty.</p><p>Homies Stay brings the important pieces together: relevant locations, clear pricing, useful details, trusted reviews, and a direct way to connect with the people behind each listing.</p></div></div><div className="about-stats"><div><strong>500+</strong><span>hostels and PGs</span></div><div><strong>100+</strong><span>college neighbourhoods</span></div><div><strong>5,000+</strong><span>students finding their place</span></div></div></section>
+				<section className="about-intro"><p className="about-kicker">Why we exist</p><div className="about-intro-grid"><h2>Finding a room should not feel like finding your way through a maze.</h2><div><p>Moving for college or work is a big enough change. The search for a safe, affordable place to live should bring clarity, not more uncertainty.</p><p>Homies Stay is building a straightforward place to browse approved listings and compare the details property owners provide.</p></div></div></section>
 
 				<section className="about-roles" aria-labelledby="roles-title"><div className="about-section-heading"><div><p className="about-kicker">One platform, different needs</p><h2 id="roles-title">Designed for the whole stay journey.</h2></div><p>Whether you are searching for a room, filling one, or caring for the marketplace, Homies Stay keeps the next step close at hand.</p></div><div className="about-role-layout"><div className="about-role-tabs" role="tablist" aria-label="Homies Stay audiences">{Object.entries(roleContent).map(([key, item]) => { const Icon = item.icon; return <button className={activeRole === key ? 'active' : ''} key={key} type="button" role="tab" aria-selected={activeRole === key} onClick={() => setActiveRole(key)}><Icon aria-hidden="true" />{item.label}</button>; })}</div><article className="about-role-panel"><div className="about-role-icon"><RoleIcon aria-hidden="true" /></div><p className="about-kicker">{role.label}</p><h3>{role.title}</h3><p>{role.text}</p><ul>{role.points.map((point) => <li key={point}><FiCheck aria-hidden="true" />{point}</li>)}</ul><a href={role.link}>{role.linkText} <FiArrowUpRight aria-hidden="true" /></a></article></div></section>
 

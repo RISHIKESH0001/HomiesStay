@@ -4,7 +4,7 @@ const Footer = () => {
 			<div className="footer-content">
 				<div className="footer-brand">
 					<a className="footer-logo" href="/">Homies Stay</a>
-					<p>Find verified hostels and PG accommodations near your college.</p>
+					<p>Browse approved hostel and PG listings near your college.</p>
 				</div>
 
 				<div className="footer-column">
@@ -23,22 +23,18 @@ const Footer = () => {
 						<a href="/hostels#hostel-search-form">Search hostels</a>
 						<a href="/dashboard#explore">Student dashboard</a>
 						<a href="/about#how-it-works">How it works</a>
-						<a href="/contact#ai-assistant">Contact support</a>
+						<a href="/contact">Contact options</a>
 					</nav>
 				</div>
 
 				<div className="footer-column footer-contact">
 					<h2>Contact</h2>
-					<address>
-						<span>Kolkata, India</span>
-						<a href="mailto:support@homiesstay.com">support@homiesstay.com</a>
-						<a href="tel:+919876543210">+91 9876543210</a>
-					</address>
+					<p>Support contact details are not configured yet.</p>
 				</div>
 			</div>
 
 			<div className="footer-bottom">
-					<p>&copy; 2026 Homies Stay. All Rights Reserved.</p>
+					<p>&copy; {new Date().getFullYear()} Homies Stay. All Rights Reserved.</p>
 			</div>
 		</footer>
 	);

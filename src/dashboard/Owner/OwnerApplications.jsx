@@ -1,35 +1,47 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowUpRight, FiBarChart2, FiCheck, FiClipboard, FiHome, FiMessageCircle, FiSearch, FiUserPlus, FiX } from 'react-icons/fi';
+import { FiArrowUpRight, FiCalendar, FiCheck, FiClipboard, FiHome, FiMail, FiPhone, FiX } from 'react-icons/fi';
 import DashboardLayout from '../../layouts/DashboardLayout';
-import { getApplications, updateApplicationStatus } from '../../services/applicationStorage';
-import { studentApplications as sampleApplications } from '../../services/reviewData';
+import { getApiErrorMessage, getOwnerApplications, updateOwnerApplicationStatus } from '../../services/api';
 
-const ownerNavigation = [
-	{ label: 'Overview', icon: FiBarChart2 },
-	{ label: 'My properties', icon: FiHome, count: '3' },
-	{ label: 'Enquiries', icon: FiMessageCircle, count: '8' },
-	{ label: 'Applications', icon: FiClipboard, count: '5' },
-];
+const statusLabel = (status) => status.toLowerCase().replaceAll('_', ' ');
 
 const OwnerApplications = () => {
-	const [query, setQuery] = useState('');
-	const [filter, setFilter] = useState('All applications');
-	const [applications, setApplications] = useState(() => getApplications(sampleApplications));
-	const visibleApplications = useMemo(() => applications.filter((application) => {
-		const searchable = `${application.name} ${application.property} ${application.course}`.toLowerCase();
-		return (!query || searchable.includes(query.toLowerCase())) && (filter === 'All applications' || application.status === filter);
-	}), [applications, filter, query]);
+	const [applications, setApplications] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState('');
+	const [busyId, setBusyId] = useState(null);
 
-	const decide = (applicationId, status) => setApplications(updateApplicationStatus(applicationId, status, sampleApplications));
+	useEffect(() => {
+		getOwnerApplications({ page: 0, size: 50 })
+			.then((page) => setApplications(page.content))
+			.catch((requestError) => setError(getApiErrorMessage(requestError, 'Unable to load student applications.')))
+			.finally(() => setIsLoading(false));
+	}, []);
+
+	const changeStatus = async (applicationId, status) => {
+		setBusyId(applicationId);
+		setError('');
+		try {
+			const updated = await updateOwnerApplicationStatus(applicationId, status);
+			setApplications((current) => current.map((application) => application.id === updated.id ? updated : application));
+		} catch (requestError) {
+			setError(getApiErrorMessage(requestError, 'Unable to update this application.'));
+		} finally {
+			setBusyId(null);
+		}
+	};
 
 	return (
-		<DashboardLayout role="owner" profile={{ initials: 'RS', name: 'Riya Shah', type: 'Property owner' }} navigation={ownerNavigation} pageTitle="Applications">
+		<DashboardLayout role="owner" pageTitle="Applications">
 			<main className="dashboard-content owner-workspace-page">
-				<section className="dashboard-welcome owner-workspace-welcome"><div><p className="dashboard-eyebrow">Admissions desk</p><h1>Find the next <span>good match.</span></h1><p className="dashboard-subtitle">Review student applications across your properties, make decisions quickly, and keep room assignments moving.</p></div><div className="owner-workspace-header-stat"><strong>{applications.filter((application) => application.status === 'New').length}</strong><span>to review</span></div></section>
-				<section className="owner-workspace-toolbar"><div className="owner-properties-search"><FiSearch /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search students, courses, or properties" aria-label="Search applications" /></div><select value={filter} onChange={(event) => setFilter(event.target.value)} aria-label="Filter applications"><option>All applications</option><option>New</option><option>Review</option><option>Shortlisted</option><option>Accepted</option><option>Declined</option></select><span>{visibleApplications.length} applications</span></section>
-				<section className="owner-workspace-panel"><div className="owner-workspace-panel-heading"><div><p className="dashboard-eyebrow">Student applications</p><h2>Review and decide</h2></div><span>Move-in dates included</span></div><div className="owner-applications-list">{visibleApplications.map((application) => { const status = application.status; return <article className="owner-application-card" key={application.id}><span className="dashboard-top-avatar">{application.initials || application.name.slice(0, 2).toUpperCase()}</span><div className="owner-application-copy"><strong>{application.name}</strong><b>{application.property} · {application.roomPreference || application.room}</b><span>{application.course}</span><small>Move-in {application.moveIn}</small></div><div className="owner-application-status"><em className={status.toLowerCase()}>{status}</em><div><Link className="review-link" to={`/owner/students/${application.id}`}><FiUserPlus /> View student</Link><button type="button" onClick={() => decide(application.id, 'Accepted')} disabled={status === 'Accepted' || status === 'Declined'}><FiCheck /> Accept</button><button type="button" onClick={() => decide(application.id, 'Declined')} disabled={status === 'Declined' || status === 'Accepted'}><FiX /> Decline</button></div></div></article>; })}</div></section>
-				<section className="owner-admission-summary"><div><span className="owner-workspace-summary-icon"><FiUserPlus /></span><div><strong>{applications.filter((application) => application.status === 'Accepted').length}</strong><span>accepted applications</span></div></div><p>Accepted students still need a room assignment and move-in checklist before their first day.</p><Link to="/owner/properties"><FiArrowUpRight /> View properties</Link></section>
+				<section className="dashboard-welcome owner-workspace-welcome"><div><p className="dashboard-eyebrow">Student applications</p><h1>Stay requests for your properties.</h1><p className="dashboard-subtitle">Applications are visible only to the owner of the selected property.</p></div><Link className="dashboard-primary-action" to="/owner/properties"><FiHome /> Manage properties <FiArrowUpRight /></Link></section>
+				{error && <p className="field-error" role="alert">{error}</p>}
+				{isLoading ? <p role="status">Loading applications…</p> : applications.length ? <section className="owner-workspace-panel"><div className="owner-applications-list">{applications.map((application) => <article className="owner-application-card" key={application.id}>
+						<span className="dashboard-top-avatar">{application.studentName.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase()}</span>
+						<div className="owner-application-copy"><strong>{application.studentName}</strong><b>{application.propertyName}</b><span>{application.roomPreference}</span><small><FiCalendar /> Move-in {application.moveInDate}</small><p>{application.message}</p><span><a href={`mailto:${application.studentEmail}`}><FiMail /> {application.studentEmail}</a>{application.studentPhone && <> · <a href={`tel:${application.studentPhone}`}><FiPhone /> {application.studentPhone}</a></>}</span><Link className="review-link" to={`/hostels/${application.propertySlug}`}><FiHome /> View property</Link></div>
+						<div className="owner-application-status"><em className={application.status.toLowerCase()}>{statusLabel(application.status)}</em>{application.status === 'SUBMITTED' && <div><button type="button" disabled={busyId === application.id} onClick={() => changeStatus(application.id, 'REVIEWING')}>Mark reviewing</button><button type="button" disabled={busyId === application.id} onClick={() => changeStatus(application.id, 'ACCEPTED')}><FiCheck /> Accept</button><button type="button" disabled={busyId === application.id} onClick={() => changeStatus(application.id, 'DECLINED')}><FiX /> Decline</button></div>}{application.status === 'REVIEWING' && <div><button type="button" disabled={busyId === application.id} onClick={() => changeStatus(application.id, 'ACCEPTED')}><FiCheck /> Accept</button><button type="button" disabled={busyId === application.id} onClick={() => changeStatus(application.id, 'DECLINED')}><FiX /> Decline</button></div>}</div>
+					</article>)}</div></section> : <section className="student-applications-empty"><span><FiClipboard /></span><p className="dashboard-eyebrow">Student applications</p><h2>No applications yet.</h2><p>Applications submitted for your properties will appear here.</p><Link to="/owner/properties"><FiHome /> Manage properties</Link></section>}
 			</main>
 		</DashboardLayout>
 	);

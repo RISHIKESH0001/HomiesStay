@@ -1,47 +1,32 @@
+import { useEffect, useState } from 'react';
 import PropertyCard from '../PropertyCard/PropertyCard';
-import { roomBengaluru1, roomHyderabad1, roomPune1 } from '../../assets/hostelImages';
-
-const featuredHostels = [
-	{
-		name: 'The Nest Residency',
-		location: 'Koramangala, Bengaluru',
-		price: 'Rs. 8,500',
-		rating: '4.8',
-		image: roomBengaluru1,
-	},
-	{
-		name: 'Campus Cove',
-		location: 'Hinjewadi, Pune',
-		price: 'Rs. 7,200',
-		rating: '4.7',
-		image: roomPune1,
-	},
-	{
-		name: 'Olive House Madhapur',
-		location: 'Madhapur, Hyderabad',
-		price: 'Rs. 9,000',
-		rating: '4.9',
-		image: roomHyderabad1,
-	},
-];
+import { getPublicProperties } from '../../services/propertyCatalog';
 
 const FeaturedHostels = () => {
+	const [properties, setProperties] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		let isCurrent = true;
+		getPublicProperties({ size: 3 })
+			.then((page) => { if (isCurrent) setProperties(page.content); })
+			.catch(() => { if (isCurrent) setProperties([]); })
+			.finally(() => { if (isCurrent) setIsLoading(false); });
+		return () => { isCurrent = false; };
+	}, []);
+
 	return (
 		<section className="featured-section" aria-labelledby="featured-title">
 			<div className="featured-heading">
 				<div>
 					<p className="featured-kicker">Handpicked for you</p>
-					<h2 id="featured-title">Featured Hostels</h2>
+					<h2 id="featured-title">Available stays</h2>
 				</div>
 				<a className="featured-view-all" href="/hostels">
 					View all hostels <span aria-hidden="true">&rarr;</span>
 				</a>
 			</div>
-			<div className="property-grid">
-				{featuredHostels.map((hostel) => (
-					<PropertyCard key={hostel.name} hostel={hostel} />
-				))}
-			</div>
+			{isLoading ? <p role="status">Loading approved listings…</p> : properties.length ? <div className="property-grid">{properties.map((property) => <PropertyCard key={property.id} hostel={property} />)}</div> : <p>No approved listings are available yet.</p>}
 		</section>
 	);
 };

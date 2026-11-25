@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+target/
+backend/.env
+.copilot-azure/
 
 # Editor directories and files
 .vscode/*

@@ -15,7 +15,7 @@ const CallToAction = () => {
 				<p className="cta-kicker">Your new home is closer than you think</p>
 				<h2 id="cta-title">Ready to Find Your Perfect Hostel?</h2>
 				<p className="cta-description">
-					Join thousands of students who found a place they love near campus.
+					Browse published stays or create an account to get started.
 				</p>
 				<div className="cta-actions">
 					<Button className="cta-button" href="/hostels" variant="primary">

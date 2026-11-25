@@ -1,43 +1,37 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button';
+import { getApiErrorMessage, registerAccount } from '../../services/api';
 
 const Register = () => {
 	const navigate = useNavigate();
 	const [role, setRole] = useState('student');
 	const [isPolicyOpen, setIsPolicyOpen] = useState(false);
-	const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [apiError, setApiError] = useState('');
 	const [errors, setErrors] = useState({});
 
 	useEffect(() => {
 		const handleKeyDown = (event) => {
 			if (event.key === 'Escape') {
 				setIsPolicyOpen(false);
-				setIsSuccessOpen(false);
 			}
 		};
 
-		if (isPolicyOpen || isSuccessOpen) {
+		if (isPolicyOpen) {
 			document.addEventListener('keydown', handleKeyDown);
 		}
 
 		return () => document.removeEventListener('keydown', handleKeyDown);
-	}, [isPolicyOpen, isSuccessOpen]);
+	}, [isPolicyOpen]);
 
-	useEffect(() => {
-		if (!isSuccessOpen) {
-			return undefined;
-		}
-
-		const redirectTimer = window.setTimeout(() => navigate('/login'), 1800);
-		return () => window.clearTimeout(redirectTimer);
-	}, [isSuccessOpen, navigate]);
-
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const form = event.currentTarget;
 		const formData = new FormData(form);
 		const name = formData.get('name').trim();
+		const email = formData.get('email').trim().toLowerCase();
+		const username = formData.get('username').trim();
 		const phone = formData.get('phone').replace(/[\s-]/g, '');
 		const password = formData.get('password');
 		const confirmPassword = formData.get('confirmPassword');
@@ -50,6 +44,10 @@ const Register = () => {
 
 		if (!/^[A-Za-z][A-Za-z .'-]{1,}$/.test(name)) {
 			nextErrors.name = 'Enter your full name using at least two characters.';
+		}
+
+		if (!/^[A-Za-z0-9._-]{3,30}$/.test(username)) {
+			nextErrors.username = 'Use 3–30 letters, numbers, dots, underscores, or hyphens.';
 		}
 
 		if (!/^(?:\+91)?[6-9]\d{9}$/.test(phone)) {
@@ -66,7 +64,16 @@ const Register = () => {
 
 		setErrors(nextErrors);
 		if (Object.keys(nextErrors).length === 0) {
-			setIsSuccessOpen(true);
+			setApiError('');
+			setIsSubmitting(true);
+			try {
+				await registerAccount({ name, email, username, phone, password, role });
+				navigate(`/verify-email?email=${encodeURIComponent(email)}`, { replace: true });
+			} catch (error) {
+				setApiError(getApiErrorMessage(error, 'Unable to create your account. Please try again.'));
+			} finally {
+				setIsSubmitting(false);
+			}
 		}
 	};
 
@@ -83,13 +90,9 @@ const Register = () => {
 					<p className="auth-kicker">A better place to begin</p>
 					<h1>Make room for what comes next.</h1>
 					<p>
-						Join a trusted student community and find a verified stay that feels
+						Create an account to explore approved property listings that feel
 						like home.
 					</p>
-				</div>
-				<div className="auth-intro-note">
-					<span aria-hidden="true">5000+</span>
-					students already finding their place
 				</div>
 			</section>
 
@@ -97,7 +100,7 @@ const Register = () => {
 				<div className="auth-panel-header">
 					<p className="auth-kicker">Welcome to Homies Stay</p>
 					<h2>Create your account</h2>
-					<p>Start discovering verified hostels near your college.</p>
+					<p>Start browsing approved listings near your college.</p>
 				</div>
 
 				<form className="register-form" onSubmit={handleSubmit}>
@@ -138,6 +141,11 @@ const Register = () => {
 							<input type="email" name="email" placeholder="you@example.com" required />
 						</label>
 					</div>
+					<label className="auth-field">
+						<span>Username</span>
+						<input type="text" name="username" placeholder="Choose a username" minLength="3" maxLength="30" autoComplete="username" required {...getErrorProps('username')} />
+						{errors.username && <small className="field-error" id="username-error">{errors.username}</small>}
+					</label>
 
 					<label className="auth-field">
 						<span>Phone number</span>
@@ -166,9 +174,10 @@ const Register = () => {
 						<input type="checkbox" required />
 						<span>I agree to the terms and privacy policy.</span>
 					</label>
+					{apiError && <p className="field-error" role="alert">{apiError}</p>}
 
-					<Button className="register-submit" type="submit">
-						Create account <span aria-hidden="true">&rarr;</span>
+					<Button className="register-submit" type="submit" disabled={isSubmitting}>
+						{isSubmitting ? 'Creating account...' : 'Create account'} <span aria-hidden="true">&rarr;</span>
 					</Button>
 				</form>
 
@@ -196,29 +205,14 @@ const Register = () => {
 						<div className="policy-modal-body">
 							<p>Your information is used to create and manage your Homies Stay account.</p>
 							<ul>
-								<li>We only use your contact details for account updates, bookings, and support.</li>
-								<li>Your personal information is not sold to third parties.</li>
-								<li>Hostel and payment information is handled securely through trusted services.</li>
-								<li>You can request changes or deletion of your account information at any time.</li>
+								<li>Your email address is used for account verification and sign-in.</li>
+								<li>Your password is stored as a one-way hash, not in readable form.</li>
+								<li>Property owners can see only property records belonging to their account.</li>
 							</ul>
 							<p>By continuing, you confirm that the information you provide is accurate and that you agree to these policies.</p>
 						</div>
 						<button className="policy-modal-action" type="button" onClick={() => setIsPolicyOpen(false)}>
 							I understand
-						</button>
-					</section>
-				</div>
-			)}
-
-			{isSuccessOpen && (
-				<div className="policy-modal-backdrop" role="presentation">
-					<section className="policy-modal success-modal" role="dialog" aria-modal="true" aria-labelledby="success-modal-title">
-						<div className="success-icon" aria-hidden="true">&#10003;</div>
-						<p className="auth-kicker">Registration complete</p>
-						<h2 id="success-modal-title">Your account is ready</h2>
-						<p className="success-modal-text">Registration successful. Redirecting you to the login page...</p>
-						<button className="policy-modal-action" type="button" onClick={() => navigate('/login')}>
-							Continue to login
 						</button>
 					</section>
 				</div>

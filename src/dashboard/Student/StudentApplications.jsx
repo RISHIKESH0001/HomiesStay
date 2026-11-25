@@ -1,56 +1,47 @@
-import { useSelector } from 'react-redux';
-import { Link, useSearchParams } from 'react-router-dom';
-import { FiArrowUpRight, FiBookOpen, FiCalendar, FiCheckCircle, FiClock, FiCompass, FiHome, FiMessageCircle, FiPlus } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FiBookOpen, FiCalendar, FiCompass, FiHome, FiMapPin, FiX } from 'react-icons/fi';
 import DashboardLayout from '../../layouts/DashboardLayout';
-import { getApplications } from '../../services/applicationStorage';
-import { getPropertySlug } from '../../services/propertyStorage';
-import { studentApplications as sampleApplications } from '../../services/reviewData';
+import { getApiErrorMessage, getStudentApplications, withdrawStudentApplication } from '../../services/api';
 import './studentApplications.css';
 
-const studentNavigation = [
-	{ label: 'Overview', icon: FiHome },
-	{ label: 'Explore stays', icon: FiCompass },
-	{ label: 'Saved homes', icon: FiCheckCircle },
-	{ label: 'My enquiries', icon: FiMessageCircle },	
-	{ label: 'Applications', icon: FiBookOpen },
-];
+const statusLabel = (status) => status.toLowerCase().replaceAll('_', ' ');
 
 const StudentApplications = () => {
-	const user = useSelector((state) => state.auth.user);
-	const [searchParams] = useSearchParams();
-	const studentId = user?.id || user?.email || user?.username || user?.name;
-	const applications = getApplications(sampleApplications).filter((application) => application.studentId === studentId);
+	const location = useLocation();
+	const [applications, setApplications] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState('');
+	const [busyId, setBusyId] = useState(null);
+
+	useEffect(() => {
+		getStudentApplications({ page: 0, size: 50 })
+			.then((page) => setApplications(page.content))
+			.catch((requestError) => setError(getApiErrorMessage(requestError, 'Unable to load your applications.')))
+			.finally(() => setIsLoading(false));
+	}, []);
+
+	const handleWithdraw = async (applicationId) => {
+		setBusyId(applicationId);
+		setError('');
+		try {
+			const updated = await withdrawStudentApplication(applicationId);
+			setApplications((current) => current.map((application) => application.id === updated.id ? updated : application));
+		} catch (requestError) {
+			setError(getApiErrorMessage(requestError, 'Unable to withdraw this application.'));
+		} finally {
+			setBusyId(null);
+		}
+	};
 
 	return (
-		<DashboardLayout role="student" profile={{ initials: (user?.name || 'ST').slice(0, 2).toUpperCase(), name: user?.name || 'Student user', type: 'Student account' }} navigation={studentNavigation} pageTitle="My applications">
+		<DashboardLayout role="student" pageTitle="My applications">
 			<main className="dashboard-content owner-workspace-page">
-				{searchParams.get('submitted') && <div className="owner-properties-success student-application-success" role="status"><FiCheckCircle /> Application sent. You can follow its status here.</div>}
-				<section className="dashboard-welcome owner-workspace-welcome">
-					<div><p className="dashboard-eyebrow">Your applications</p><h1>Keep your next stay <span>moving forward.</span></h1><p className="dashboard-subtitle">Track owner responses and revisit the details you shared for each stay.</p></div>
-					<div className="owner-workspace-header-stat"><strong>{applications.length}</strong><span>applications sent</span></div>
-				</section>
-				{applications.length ? (
-					<section className="owner-workspace-panel">
-						<div className="owner-workspace-panel-heading"><div><p className="dashboard-eyebrow">Application history</p><h2>Submitted stays</h2></div><span>Most recent first</span></div>
-						<div className="student-applications-list">
-							{[...applications].sort((first, second) => new Date(second.submittedAt) - new Date(first.submittedAt)).map((application) => (
-								<article className="student-application-card" key={application.id}>
-									<div className="student-application-card-icon"><FiHome /></div>
-									<div className="student-application-card-main">
-										<div className="student-application-card-heading"><div><strong>{application.property}</strong><span>{application.propertyLocation || application.city || 'Stay application'}</span></div><em className={`application-status ${application.status.toLowerCase()}`}>{application.status}</em></div>
-										<div className="student-application-card-meta"><span><FiBookOpen /> {application.course}</span><span><FiCalendar /> Move-in {application.moveIn}</span><span><FiClock /> {application.duration}</span></div>
-										<p>{application.roomPreference || application.room} · Budget Rs. {Number(application.monthlyBudget || 0).toLocaleString('en-IN')} / month</p>
-										<Link to={`/hostels/${application.propertySlug || getPropertySlug(application.property)}`} className="student-application-open-link">View stay <FiArrowUpRight /></Link>
-									</div>
-								</article>
-							))}
-						</div>
-					</section>
-				) : (
-					<section className="student-applications-empty">
-						<span><FiMessageCircle /></span><p className="dashboard-eyebrow">No applications yet</p><h2>Your shortlist can become a place to live.</h2><p>Open a stay that feels right and send the owner your move-in date and preferences.</p><Link to="/hostels"><FiPlus /> Explore stays</Link>
-					</section>
-				)}
+				<section className="dashboard-welcome owner-workspace-welcome"><div><p className="dashboard-eyebrow">Application history</p><h1>Your stay requests.</h1><p className="dashboard-subtitle">Applications and status updates saved to your account.</p></div><Link className="dashboard-primary-action" to="/hostels"><FiCompass /> Explore stays</Link></section>
+				{location.state?.submitted && <p className="student-application-success" role="status"><FiBookOpen /> Your application was submitted successfully.</p>}
+				{error && <p className="field-error" role="alert">{error}</p>}
+				{isLoading ? <p role="status">Loading applications…</p> : applications.length ? <section className="owner-workspace-panel"><div className="student-applications-list">{applications.map((application) => <article className="student-application-card" key={application.id}>
+						<span className="student-application-card-icon"><FiBookOpen /></span><div className="student-application-card-main"><div className="student-application-card-heading"><div><strong>{application.propertyName}</strong><span>{application.area}, {application.city}</span></div><em className={`application-status ${application.status.toLowerCase()}`}>{statusLabel(application.status)}</em></div><div className="student-application-card-meta"><span><FiCalendar /> Move-in {application.moveInDate}</span><span><FiMapPin /> {application.roomPreference}</span><span>Submitted {application.createdAt ? new Date(application.createdAt).toLocaleDateString() : ''}</span></div><p>{application.message}</p><Link className="student-application-open-link" to={`/hostels/${application.propertySlug}`}><FiHome /> View listing</Link></div>{['SUBMITTED', 'REVIEWING'].includes(application.status) && <button className="review-link" type="button" disabled={busyId === application.id} onClick={() => handleWithdraw(application.id)}><FiX /> {busyId === application.id ? 'Withdrawing…' : 'Withdraw'}</button>}</article>)}</div></section> : <section className="student-applications-empty"><span><FiBookOpen /></span><p className="dashboard-eyebrow">Application history</p><h2>No applications yet.</h2><p>Applications you submit for published stays will appear here.</p><Link to="/hostels"><FiCompass /> Explore approved stays</Link></section>}
 			</main>
 		</DashboardLayout>
 	);

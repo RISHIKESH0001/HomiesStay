@@ -1,23 +1,23 @@
 const benefits = [
 	{
-		icon: '✅',
-		title: 'Verified Hostels',
-		text: 'All properties are verified by our team for safety and quality.',
+		icon: '⌕',
+		title: 'Browse published stays',
+		text: 'See listings that have been approved and published by the platform.',
 	},
 	{
-		icon: '💳',
-		title: 'Easy Payments',
-		text: 'Pay booking fees and hostel rent securely online.',
+		icon: '✉',
+		title: 'Email-verified accounts',
+		text: 'Accounts must verify their email address before they can sign in.',
 	},
 	{
-		icon: '📍',
-		title: 'Nearby Colleges',
-		text: 'Find hostels close to your college and save travel time.',
+		icon: '⌖',
+		title: 'Search by location',
+		text: 'Search currently published stays by city, area, or nearby institution.',
 	},
 	{
-		icon: '⭐',
-		title: 'Trusted Reviews',
-		text: 'Read genuine reviews from students before booking.',
+		icon: '⌂',
+		title: 'Owner-managed listings',
+		text: 'Property owners can manage their listing information in one account.',
 	},
 ];
 
@@ -27,7 +27,7 @@ const WhyChooseUs = () => {
 			<div className="why-heading">
 				<p className="why-kicker">A better way to settle in</p>
 				<h2 id="why-title">Why Choose Homies Stay?</h2>
-				<p>Everything you need to find the perfect student accommodation.</p>
+				<p>Core tools for browsing published stays and managing owner listings.</p>
 			</div>
 
 			<div className="benefits-grid">
